@@ -115,8 +115,10 @@ public:
 
 		while (IsOperatorControl() && IsEnabled()) {
 			float angle = Gyro.GetAngle();
+			float counter = 0.0f;
 			setDriveSpeed();
 			SmartDashboard::PutNumber("DB/Slider 0", angle * 5.0f / 360.0f);
+			SmartDashboard::PutNumber("TEST COUNTER", counter++);
 
 			frc::Wait(0.005);
 		}
