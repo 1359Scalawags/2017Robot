@@ -2,6 +2,7 @@
 #include <VictorSP.h>
 #include <Constants.h>
 #include <ADXRS450_Gyro.h>
+#include <cmath>
 
 //hi...can you read me! testing 1
 /**
@@ -114,7 +115,8 @@ public:
 		Gyro.Reset();
 
 		while (IsOperatorControl() && IsEnabled()) {
-			float angle = Gyro.GetAngle();
+			//float angle = Gyro.GetAngle();
+			double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
 
 			setDriveSpeed();
 			SmartDashboard::PutNumber("GYRO", angle * 5.0f / 360.0f);
