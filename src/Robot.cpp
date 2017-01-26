@@ -115,11 +115,12 @@ public:
 		Gyro.Reset();
 
 		while (IsOperatorControl() && IsEnabled()) {
-			//float angle = Gyro.GetAngle();
-			double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
+			float angle = Gyro.GetAngle();
+			//double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
 
 			setDriveSpeed();
-			SmartDashboard::PutNumber("GYRO", angle * 5.0f / 360.0f);
+			angle = angle % 360;
+			SmartDashboard::PutNumber("GYRO", angle);
 			frc::Wait(0.005);
 		}
 	}
