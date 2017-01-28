@@ -3,6 +3,7 @@
 #include <Constants.h>
 #include <ADXRS450_Gyro.h>
 #include <cmath>
+#include <Drive.cpp>
 
 //hi...can you read me! testing 1
 /**
@@ -21,14 +22,16 @@
 
 class Robot: public frc::SampleRobot {
 
-	RobotDrive mainDrive;
-
-	Joystick Lstick;
-	Joystick Rstick;
+	//RobotDrive mainDrive;
+	Drive drive;
+	//Joystick Lstick;
+	//Joystick Rstick;
 	//Joystick Estick;
 
-	bool DriveForward;
-	ADXRS450_Gyro Gyro;
+	//bool DriveForward;
+	//ADXRS450_Gyro Gyro;
+
+
 
 	/**
 	frc::RobotDrive myRobot { 0, 1 }; // robot drive system
@@ -39,15 +42,16 @@ class Robot: public frc::SampleRobot {
 	**/
 
 public:
-	Robot() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
-		Lstick(Left_Joystick_Port),
-		Rstick(Right_Joystick_Port),
+	Robot() : //mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
+		//Lstick(Left_Joystick_Port),
+		//Rstick(Right_Joystick_Port),
 		//Estick(Extra_Joystick_Port),
-		DriveForward(true),
-		Gyro()
+		//DriveForward(true),
+		drive()
+		//Gyro()
 	{
 
-		mainDrive.SetExpiration(0.1);
+		//drive.SetExpiration(0.1);
 
 		//Note SmartDashboard is not initialized here, wait until RobotInit to make SmartDashboard calls
 		//myRobot.SetExpiration(0.1);
@@ -111,20 +115,23 @@ public:
 	 */
 
 	void OperatorControl() override {
-		mainDrive.SetSafetyEnabled(true);
-		Gyro.Reset();
+//		mainDrive.SetSafetyEnabled(true);
+		drive.Safety();
 
 		while (IsOperatorControl() && IsEnabled()) {
-			float angle = Gyro.GetAngle();
+			//float angle = Gyro.GetAngle();
 			//double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
 
-			setDriveSpeed();
-			angle = angle % 360;
-			SmartDashboard::PutNumber("GYRO", angle);
+//			setDriveSpeed();
+			drive.Tellop();
+			//int large_angle = (int)(angle * 1000);
+			//angle = (large_angle % 360000) / 1000.0f;
+			//SmartDashboard::PutNumber("GYRO", angle);
 			frc::Wait(0.005);
 		}
 	}
 
+	/*
 	void setDriveSpeed(){
 		float LeftStickValue = .75 * (-getJoystickTransform(Lstick.GetY()));
 		float RightStickValue = .75 * (-getJoystickTransform(Rstick.GetY()));
@@ -136,7 +143,7 @@ public:
 		}
 
 	}
-
+*/
 	float getJoystickTransform(float input){
 		return input;
 
