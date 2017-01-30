@@ -32,7 +32,6 @@ class Robot: public frc::SampleRobot {
 	//ADXRS450_Gyro Gyro;
 
 
-
 	/**
 	frc::RobotDrive myRobot { 0, 1 }; // robot drive system
 	frc::Joystick stick { 0 }; // only joystick
@@ -61,7 +60,16 @@ public:
 
 	void RobotInit() {
 
+		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
+		//CameraServer::GetInstance()->SetQuality(50);
+
+		CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
 		CameraServer::GetInstance()->StartAutomaticCapture();
+
+
+		if(fork() == 0){
+			system("/home/lvuser/grip &");
+		}
 
 		/**
 		chooser.AddDefault(autoNameDefault, autoNameDefault);

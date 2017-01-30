@@ -19,6 +19,9 @@ const int Extra_Jaystick_Port = 2;
 
 static constexpr double kAnglePoint = 0.0;
 
+const int CENTER_X = 160;
+const int TOLERANCE_X = 10;
+
 
 
 
