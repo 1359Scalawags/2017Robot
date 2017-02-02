@@ -78,11 +78,12 @@ class Drive{
 	}
 
 	inline float TargetTrack(){
-
+		SmartDashboard::PutString("In Target Track start", "YES");
 			auto gap = NetworkTable::GetTable("grip");
+			SmartDashboard::PutString("In Target Track post gap", "YES");
 		       auto areas = gap->GetNumberArray("targets/area", llvm::ArrayRef<double>());
 
-		       return 0;
+
 		       SmartDashboard::PutString("Before For Loop", "YES");
 		       double totalArea = 0;
 		       for (uint i = 0; i < areas.size(); i++){
@@ -90,6 +91,7 @@ class Drive{
 		       }
 		       SmartDashboard::PutString("After For Loop", "YES");
 		       SmartDashboard::PutNumber("TARGETS_FOUND", totalArea);
+		       return 0;
 		       /*
 		        // Pick whatever target has the biggest area
 		        double targetArea = -1.0, targetX = 0.0;
