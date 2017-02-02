@@ -32,13 +32,13 @@ class Robot: public frc::SampleRobot {
 	//ADXRS450_Gyro Gyro;
 
 
-	/**
+	/*
 	frc::RobotDrive myRobot { 0, 1 }; // robot drive system
 	frc::Joystick stick { 0 }; // only joystick
 	frc::SendableChooser<std::string> chooser;
 	const std::string autoNameDefault = "Default";
 	const std::string autoNameCustom = "My Auto";
-	**/
+	*/
 
 public:
 	Robot() : //mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),

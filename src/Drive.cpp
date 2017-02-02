@@ -56,13 +56,15 @@ class Drive{
 		}else{
 			setDriveSpeed(Smult);
 		}
+		SmartDashboard::PutString("Before Target Track", "YES");
+		TargetTrack();
+		SmartDashboard::PutString("After Target Track", "YES");
 	}
 
 	void setDriveSpeed(float multiplier){
 		float LeftStickValue = multiplier * .75 * (-getJoystickTransform(Lstick.GetY()));
 		float RightStickValue = multiplier * .75 * (-getJoystickTransform(Rstick.GetY()));
 
-		TargetTrack();
 
 		if(DriveForward == true){
 			mainDrive.TankDrive(LeftStickValue, RightStickValue);
@@ -75,20 +77,29 @@ class Drive{
 		return input;
 	}
 
-	float TargetTrack(){
+	inline float TargetTrack(){
 
 			auto gap = NetworkTable::GetTable("grip");
 		       auto areas = gap->GetNumberArray("targets/area", llvm::ArrayRef<double>());
 
 		       return 0;
+		       SmartDashboard::PutString("Before For Loop", "YES");
+		       double totalArea = 0;
+		       for (uint i = 0; i < areas.size(); i++){
+		    	   totalArea = totalArea + areas[i];
+		       }
+		       SmartDashboard::PutString("After For Loop", "YES");
+		       SmartDashboard::PutNumber("TARGETS_FOUND", totalArea);
+		       /*
 		        // Pick whatever target has the biggest area
-		        /*double targetArea = -1.0, targetX = 0.0;
+		        double targetArea = -1.0, targetX = 0.0;
 		        for (uint i = 0; i < areas.size(); i++) {
 		            if (areas[i] > targetArea) {
 		                targetArea = areas[i];
 		                targetX = xs[i];
 		            }
 		        }
+
 
 		        // If we didn't find a target, return control to the operator
 		        if (targetArea < 0.0) {
