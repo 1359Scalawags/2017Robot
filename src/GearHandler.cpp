@@ -1,3 +1,6 @@
+#include <Constants.h>
+#include "WPILib.h"
+#include <VictorSP.h>
 /*
  * GearHandler.cpp
  *
@@ -5,6 +8,20 @@
  *      Author: Destin
  */
 
+enum DoorState{
+	in = 0,
+	out = 1
+};
 
+
+class GearHandler{
+
+private:
+
+public:
+	inline void Doors(){
+
+	}
+};
 
 

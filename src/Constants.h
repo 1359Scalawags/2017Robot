@@ -13,6 +13,10 @@ const int LeftB_Motor_ID = 1;
 const int RightA_Motor_ID = 2;
 const int RightB_Motor_ID = 3;
 
+const int Platform_Motor_ID = 4;
+const int Flap_Motor_ID = 5;
+
+
 const int Left_Joystick_Port = 0;
 const int Right_Joystick_Port = 1;
 const int Extra_Joystick_Port = 2;

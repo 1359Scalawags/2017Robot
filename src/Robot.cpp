@@ -41,6 +41,9 @@ class Robot: public frc::SampleRobot {
 	*/
 
 public:
+
+
+
 	Robot() : //mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 		//Lstick(Left_Joystick_Port),
 		//Rstick(Right_Joystick_Port),
@@ -64,15 +67,18 @@ public:
 		//CameraServer::GetInstance()->SetQuality(50);
 
 		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
-		CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
-		CameraServer::GetInstance()->StartAutomaticCapture();
+		/*CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
+		CameraServer::GetInstance()->StartAutomaticCapture();*/
 
 
-		if(fork() == 0){
+		std::thread visionThread(VisionThread);
+		visionThread.detach();
+
+		/*if(fork() == 0){
 			SmartDashboard::PutString("forked", "yes");
 			system("/home/lvuser/grip &");
 
-		}
+		}*/
 
 		/*
 		chooser.AddDefault(autoNameDefault, autoNameDefault);
@@ -81,6 +87,25 @@ public:
 		*/
 
 	}
+
+	static void VisionThread(){
+		grip::GripAreaPipeline gap;
+		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
+		        camera.SetResolution(320, 240);
+		        cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
+		        cs::CvSource outputStreamStd = CameraServer::GetInstance()->PutVideo("Gray", 640, 480);
+		        cv::Mat source;
+		        cv::Mat output;
+		        while(true) {
+		            cvSink.GrabFrame(source);
+		            gap.Process(source);
+		            //std::vector<std::vector<cv::Point>>* output = gap.GetFilterContoursOutput();
+		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
+		            outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
+		        }
+
+	}
+
 	/*void RobotInit() {
 
 			//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
