@@ -56,9 +56,7 @@ class Drive{
 		}else{
 			setDriveSpeed(Smult);
 		}
-		SmartDashboard::PutString("Before Target Track", "YES");
 		TargetTrack();
-		SmartDashboard::PutString("After Target Track", "YES");
 	}
 
 	void setDriveSpeed(float multiplier){
@@ -78,19 +76,15 @@ class Drive{
 	}
 
 	inline float TargetTrack(){
-		SmartDashboard::PutString("In Target Track start", "YES");
 			auto gap = NetworkTable::GetTable("grip");
-			SmartDashboard::PutString("In Target Track post gap", "YES");
 		       auto areas = gap->GetNumberArray("targets/area", llvm::ArrayRef<double>());
 
 
-		       SmartDashboard::PutString("Before For Loop", "YES");
 		       double totalArea = 0;
 		       for (uint i = 0; i < areas.size(); i++){
 		    	   totalArea = totalArea + areas[i];
 		       }
-		       SmartDashboard::PutString("After For Loop", "YES");
-		       SmartDashboard::PutNumber("TARGETS_FOUND", totalArea);
+		       SmartDashboard::PutNumber("TARGETS_FOUND", areas.size());
 		       return 0;
 		       /*
 		        // Pick whatever target has the biggest area

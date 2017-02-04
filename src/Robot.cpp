@@ -5,7 +5,7 @@
 #include <cmath>
 #include <Drive.cpp>
 
-//hi...can you read me! testing 1
+//NOTE: Its ok to delet setSource method in the grip pipline
 /**
  * This is a demo program showing the use of the RobotDrive class.
  * The SampleRobot class is the base of a robot application that will
@@ -63,7 +63,8 @@ public:
 		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
 		//CameraServer::GetInstance()->SetQuality(50);
 
-		CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
+		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
+		CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
 		CameraServer::GetInstance()->StartAutomaticCapture();
 
 
