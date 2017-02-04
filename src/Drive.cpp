@@ -9,6 +9,8 @@
 // Drive.cpp  Created on: Jan 27, 2017      Author: Destin
 
 class Drive{
+
+private:
 	RobotDrive mainDrive;
 
 	Joystick Lstick;
@@ -19,9 +21,13 @@ class Drive{
 	ADXRS450_Gyro Gyro;
 	AnalogInput Sonar;
 
+
 	//grip::GripAreaPipeline gap;
 
-	public: Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
+public:
+	std::shared_ptr<NetworkTable> table;
+
+	Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 			Lstick(Left_Joystick_Port),
 			Rstick(Right_Joystick_Port),
 			DriveForward(true),
@@ -30,6 +36,7 @@ class Drive{
 	{
 		mainDrive.SetExpiration(0.1);
 		Sonar.SetAverageBits(4);
+		table = NetworkTable::GetTable("GRIP/myConoutsReport");
 
 	}
 
@@ -76,8 +83,8 @@ class Drive{
 	}
 
 	inline float TargetTrack(){
-			auto gap = NetworkTable::GetTable("grip");
-		       auto areas = gap->GetNumberArray("targets/area", llvm::ArrayRef<double>());
+			//auto gap = NetworkTable::GetTable("grip");
+		       std::vector<double> areas = table->GetNumberArray("area", llvm::ArrayRef<double>());
 
 
 		       double totalArea = 0;

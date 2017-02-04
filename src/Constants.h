@@ -15,7 +15,7 @@ const int RightB_Motor_ID = 3;
 
 const int Left_Joystick_Port = 0;
 const int Right_Joystick_Port = 1;
-const int Extra_Jaystick_Port = 2;
+const int Extra_Joystick_Port = 2;
 
 static constexpr double kAnglePoint = 0.0;
 

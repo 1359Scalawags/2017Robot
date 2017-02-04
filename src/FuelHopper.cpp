@@ -8,13 +8,9 @@
  *      Author: Destin
  */
 
-class FuelContainer{
+class FuelHopper{
 
-	Joystick Estick;
 
-	public: FuelContainer(){
-
-	}
 
 };
 

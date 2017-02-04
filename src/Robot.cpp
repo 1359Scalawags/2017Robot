@@ -69,7 +69,9 @@ public:
 
 
 		if(fork() == 0){
+			SmartDashboard::PutString("forked", "yes");
 			system("/home/lvuser/grip &");
+
 		}
 
 		/*
