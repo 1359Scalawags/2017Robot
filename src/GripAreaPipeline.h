@@ -32,11 +32,11 @@ class GripAreaPipeline {
 
 	public:
 		GripAreaPipeline();
-		void process(cv::Mat source0);
-		cv::Mat* getresizeImageOutput();
-		cv::Mat* gethslThresholdOutput();
-		std::vector<std::vector<cv::Point> >* getfindContoursOutput();
-		std::vector<std::vector<cv::Point> >* getfilterContoursOutput();
+		void Process(cv::Mat& source0);
+		cv::Mat* GetResizeImageOutput();
+		cv::Mat* GetHslThresholdOutput();
+		std::vector<std::vector<cv::Point> >* GetFindContoursOutput();
+		std::vector<std::vector<cv::Point> >* GetFilterContoursOutput();
 };
 
 

@@ -72,14 +72,31 @@ public:
 			system("/home/lvuser/grip &");
 		}
 
-		/**
+		/*
 		chooser.AddDefault(autoNameDefault, autoNameDefault);
 		chooser.AddObject(autoNameCustom, autoNameCustom);
 		frc::SmartDashboard::PutData("Auto Modes", &chooser);
-		**/
+		*/
 
 	}
+	/*void RobotInit() {
 
+			//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
+			//CameraServer::GetInstance()->SetQuality(50);
+
+			//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
+			CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
+			CameraServer::GetInstance()->StartAutomaticCapture();
+
+
+
+			*
+			chooser.AddDefault(autoNameDefault, autoNameDefault);
+			chooser.AddObject(autoNameCustom, autoNameCustom);
+			frc::SmartDashboard::PutData("Auto Modes", &chooser);
+			*
+
+		}*/
 
 	/*
 	 * This autonomous (along with the chooser code above) shows how to select

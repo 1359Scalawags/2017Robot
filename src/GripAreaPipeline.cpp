@@ -1,19 +1,13 @@
 #include "GripAreaPipeline.h"
-/**
-* Initializes a GripAreaPipeline.
-*/
 
 namespace grip {
 
 GripAreaPipeline::GripAreaPipeline() {
 }
 /**
-* Runs an iteration of the Pipeline and updates outputs.
-*
-* Sources need to be set before calling this method. 
-*
+* Runs an iteration of the pipeline and updates outputs.
 */
-void GripAreaPipeline::process(cv::Mat source0){
+void GripAreaPipeline::Process(cv::Mat& source0){
 	//Step Resize_Image0:
 	//input
 	cv::Mat resizeImageInput = source0;
@@ -24,9 +18,9 @@ void GripAreaPipeline::process(cv::Mat source0){
 	//Step HSL_Threshold0:
 	//input
 	cv::Mat hslThresholdInput = resizeImageOutput;
-	double hslThresholdHue[] = {118.16546762589927, 149.28327645051195};
-	double hslThresholdSaturation[] = {98.60611510791367, 255.0};
-	double hslThresholdLuminance[] = {222.4370503597122, 255.0};
+	double hslThresholdHue[] = {53.417266187050345, 87.84982935153586};
+	double hslThresholdSaturation[] = {199.50539568345323, 255.0};
+	double hslThresholdLuminance[] = {190.33273381294958, 255.0};
 	hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, this->hslThresholdOutput);
 	//Step Find_Contours0:
 	//input
@@ -50,33 +44,32 @@ void GripAreaPipeline::process(cv::Mat source0){
 	filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, this->filterContoursOutput);
 }
 
-
 /**
  * This method is a generated getter for the output of a Resize_Image.
  * @return Mat output from Resize_Image.
  */
-cv::Mat* GripAreaPipeline::getresizeImageOutput(){
+cv::Mat* GripAreaPipeline::GetResizeImageOutput(){
 	return &(this->resizeImageOutput);
 }
 /**
  * This method is a generated getter for the output of a HSL_Threshold.
  * @return Mat output from HSL_Threshold.
  */
-cv::Mat* GripAreaPipeline::gethslThresholdOutput(){
+cv::Mat* GripAreaPipeline::GetHslThresholdOutput(){
 	return &(this->hslThresholdOutput);
 }
 /**
  * This method is a generated getter for the output of a Find_Contours.
  * @return ContoursReport output from Find_Contours.
  */
-std::vector<std::vector<cv::Point> >* GripAreaPipeline::getfindContoursOutput(){
+std::vector<std::vector<cv::Point> >* GripAreaPipeline::GetFindContoursOutput(){
 	return &(this->findContoursOutput);
 }
 /**
  * This method is a generated getter for the output of a Filter_Contours.
  * @return ContoursReport output from Filter_Contours.
  */
-std::vector<std::vector<cv::Point> >* GripAreaPipeline::getfilterContoursOutput(){
+std::vector<std::vector<cv::Point> >* GripAreaPipeline::GetFilterContoursOutput(){
 	return &(this->filterContoursOutput);
 }
 	/**
@@ -153,7 +146,7 @@ std::vector<std::vector<cv::Point> >* GripAreaPipeline::getfilterContoursOutput(
 			double solid = 100 * area / cv::contourArea(hull);
 			if (solid < solidity[0] || solid > solidity[1]) continue;
 			if (contour.size() < minVertexCount || contour.size() > maxVertexCount)	continue;
-			double ratio = bb.width / bb.height;
+			double ratio = (double) bb.width / (double) bb.height;
 			if (ratio < minRatio || ratio > maxRatio) continue;
 			output.push_back(contour);
 		}
