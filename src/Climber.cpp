@@ -24,7 +24,7 @@ public:
 	Climber(Joystick* Ejoy):
 		Estick(Ejoy),
 		ClimbingLimit(Climbing_Limit_ID),
-		ClimbingMotor(Climbing_Limit_ID),
+		ClimbingMotor(Climbing_Motor_ID),
 		state(NotClimbing)
 	{
 
