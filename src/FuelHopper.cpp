@@ -15,26 +15,34 @@ enum PlatformState{
 	goingDown = 4
 
 };
-enum FlapState{
-	open = 0,
-	closed = 1
-};
 
 class FuelHopper{
 private:
-
-
+	Joystick* Estick;
+	DigitalInput PlatformUpLimit;
+	DigitalInput PlatformDownLimit;
+	Talon PlatformMotor;
 public:
-	FuelHopper(){
+	FuelHopper(Joystick* Ejoy):
+		Estick(Ejoy),
+		PlatformUpLimit(Platform_Up_Limit_ID),
+		PlatformDownLimit(Platform_Down_Limit_ID),
+		PlatformMotor(Platform_Motor_ID)
+
+	{
 
 	}
 
-	inline void Platform(){
-
+	void TeleOp(){
+		MovePlatform();
 	}
 
-	inline void Flap(){
-
+	inline void MovePlatform(){
+		if((Estick->GetY() < 0 && PlatformDownLimit.Get()) || (Estick->GetY() > 0 && PlatformUpLimit.Get() == Not_Pressed)){
+			PlatformMotor.Set(Estick->GetY());
+		}else{
+			PlatformMotor.Set(0);
+		}
 	}
 
 };

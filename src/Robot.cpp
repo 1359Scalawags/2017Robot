@@ -4,6 +4,9 @@
 #include <ADXRS450_Gyro.h>
 #include <cmath>
 #include <Drive.cpp>
+#include <FuelHopper.cpp>
+#include <GearHandler.cpp>
+#include <Climber.cpp>
 
 //NOTE: Its ok to delet setSource method in the grip pipline
 /**
@@ -26,7 +29,10 @@ class Robot: public frc::SampleRobot {
 	Drive drive;
 	//Joystick Lstick;
 	//Joystick Rstick;
-	//Joystick Estick;
+	Joystick Estick;
+	FuelHopper hopper;
+	GearHandler handler;
+	Climber climber;
 
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
@@ -47,9 +53,12 @@ public:
 	Robot() : //mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 		//Lstick(Left_Joystick_Port),
 		//Rstick(Right_Joystick_Port),
-		//Estick(Extra_Joystick_Port),
 		//DriveForward(true),
-		drive()
+		drive(),
+		Estick(Extra_Joystick_Port),
+		hopper(&Estick),
+		handler(&Estick),
+		climber(&Estick)
 		//Gyro()
 	{
 
@@ -176,7 +185,10 @@ public:
 			//double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
 
 //			setDriveSpeed();
-			drive.Tellop();
+			drive.TeleOp();
+			hopper.TeleOp();
+			handler.TeleOp();
+			climber.TeleOp();
 			//int large_angle = (int)(angle * 1000);
 			//angle = (large_angle % 360000) / 1000.0f;
 			//SmartDashboard::PutNumber("GYRO", angle);

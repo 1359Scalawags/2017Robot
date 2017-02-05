@@ -47,7 +47,7 @@ public:
 	}
 
 
-	void Tellop(){
+	void TeleOp(){
 		float angle = Gyro.GetAngle();
 
 
