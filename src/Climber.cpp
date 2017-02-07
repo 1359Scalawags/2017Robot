@@ -35,12 +35,15 @@ public:
 		setMotors();
 	}
 	inline void Climb(){
-		if((Estick->GetRawButton(ClimbStart_Button_ID) == true) && (ClimbingLimit.Get() == Not_Pressed)){
-			state = ClimberState::Climbing;
-		}else if(ClimbingLimit.Get() == Pressed){
+		if(ClimbingLimit.Get() == Pressed){
 			state = ClimberState::Up;
+			SmartDashboard::PutString("ClimberState", "Up");
+		}else if(Estick->GetRawButton(ClimbStart_Button_ID) == true){
+			state = ClimberState::Climbing;
+			SmartDashboard::PutString("ClimberState", "Climbing");
 		}else{
 			state = ClimberState::NotClimbing;
+			SmartDashboard::PutString("ClimberState", "NotClimbing");
 		}
 	}
 

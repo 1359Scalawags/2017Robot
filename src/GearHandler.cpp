@@ -10,32 +10,50 @@
  *      Author: Destin
  */
 
+enum DoorState{
+	open = 0,
+	closed = 1,
+	opening = 2,
+	closing = 3
+};
 
 class GearHandler{
 private:
 	Joystick* Estick;
 	Servo DoorControl;
+	DoorState state;
 
 
 public:
 	GearHandler(Joystick* Ejoy):
 		Estick(Ejoy),
-		DoorControl(Door_Servo_ID)
+		DoorControl(Door_Servo_ID),
+		state(closed)
 	{
 
 	}
 	void TeleOp(){
-		OpenDoors();
+		SetServo();
 	}
-	inline void OpenDoors(){
-		if(Estick->GetRawButton(Door_Button_ID)){
-			if(DoorControl.Get() < .1){
-				DoorControl.Set(1);
-			}else if(DoorControl.Get() > .9){
-				DoorControl.Set(0);
+	inline void SetServo(){
+		if(state == DoorState::opening){
+			if(DoorControl.Get() == Servo_Open){
+				state = DoorState::open;
 			}
-		}else{
-
+		}else if(state == DoorState::closing){
+			if(DoorControl.Get() == Servo_Closed){
+				state = DoorState::closed;
+			}
+		}else if(state == DoorState::open){
+			if(Estick->GetRawButton(Door_Button_ID)){
+				DoorControl.Set(Servo_Closed);
+				state = DoorState::closing;
+			}
+		}else if(state == DoorState::closed){
+			if(Estick->GetRawButton(Door_Button_ID)){
+				DoorControl.Set(Servo_Open);
+				state = DoorState::opening;
+			}
 		}
 	}
 };

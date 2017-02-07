@@ -18,11 +18,11 @@ enum PlatformState{
 
 class FuelHopper{
 private:
-	double SpeedMultiplier = .25; //For debuging and testing. Remove for competition.
+	float SpeedMultiplier = .75; //For debuging and testing. Remove for competition.
 	Joystick* Estick;
 	DigitalInput PlatformUpLimit;
 	DigitalInput PlatformDownLimit;
-	Talon PlatformMotor;
+	Relay PlatformMotor;
 public:
 	FuelHopper(Joystick* Ejoy):
 		Estick(Ejoy),
@@ -39,10 +39,14 @@ public:
 	}
 
 	inline void MovePlatform(){
-		if((Estick->GetY() < 0 && PlatformDownLimit.Get()) || (Estick->GetY() > 0 && PlatformUpLimit.Get() == Not_Pressed)){
-			PlatformMotor.Set(Estick->GetY() * SpeedMultiplier);
+		if(Estick->GetY() < -0.1 && PlatformDownLimit.Get() == Not_Pressed){
+			//PlatformMotor.Set(Estick->GetY() * SpeedMultiplier);
+			PlatformMotor.Set(Relay::kReverse);
+		}else if((Estick->GetY() > 0.1 && PlatformUpLimit.Get() == Not_Pressed)){
+			PlatformMotor.Set(Relay::kForward);
 		}else{
-			PlatformMotor.Set(0);
+			//PlatformMotor.Set(0);
+			PlatformMotor.Set(Relay::kOff);
 		}
 	}
 
