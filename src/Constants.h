@@ -16,7 +16,7 @@ const int RightB_Motor_ID = 3;
 const int Platform_Motor_ID = 0;
 const int Climbing_Motor_ID = 5;
 
-const float Climbing_Motor_Speed = 0.75;
+const float Climbing_Motor_Speed = 0.75f;
 
 const int Door_Servo_ID = 9;
 
@@ -35,11 +35,11 @@ const int Platform_Down_Limit_ID = 1;
 const int Climbing_Limit_ID = 0;
 
 const int ClimbStart_Button_ID = 1;
-const int ClimbStop_Button_ID = 2;
-const int Door_Button_ID = 3;
+const int DoorOpen_Button_ID = 3;
+const int DoorClose_Button_ID = 2;
 
-const int Servo_Open = 0;
-const int Servo_Closed = 1;
+const float Servo_Open = 0.0f;
+const float Servo_Closed = 1.0f;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;

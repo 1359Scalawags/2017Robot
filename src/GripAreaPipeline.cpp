@@ -18,13 +18,31 @@ void GripAreaPipeline::Process(cv::Mat& source0){
 	//Step HSL_Threshold0:
 	//input
 	cv::Mat hslThresholdInput = resizeImageOutput;
-	double hslThresholdHue[] = {71.2230215827338, 140.06825938566553};
-	double hslThresholdSaturation[] = {133.00359712230218, 255.0};
-	double hslThresholdLuminance[] = {194.9190647482014, 255.0};
+	double hslThresholdHue[] = {0.0, 180.0};
+	double hslThresholdSaturation[] = {0.0, 255.0};
+	double hslThresholdLuminance[] = {213.70056497175142, 255.0};
 	hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, this->hslThresholdOutput);
+	//Step CV_erode0:
+	//input
+	cv::Mat cvErodeSrc = hslThresholdOutput;
+	cv::Mat cvErodeKernel;
+	cv::Point cvErodeAnchor(-1, -1);
+	double cvErodeIterations = 4.0;  // default Double
+    int cvErodeBordertype = cv::BORDER_CONSTANT;
+	cv::Scalar cvErodeBordervalue(-1);
+	cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, this->cvErodeOutput);
+	//Step CV_dilate0:
+	//input
+	cv::Mat cvDilateSrc = cvErodeOutput;
+	cv::Mat cvDilateKernel;
+	cv::Point cvDilateAnchor(-1, -1);
+	double cvDilateIterations = 4.0;  // default Double
+    int cvDilateBordertype = cv::BORDER_CONSTANT;
+	cv::Scalar cvDilateBordervalue(-1);
+	cvDilate(cvDilateSrc, cvDilateKernel, cvDilateAnchor, cvDilateIterations, cvDilateBordertype, cvDilateBordervalue, this->cvDilateOutput);
 	//Step Find_Contours0:
 	//input
-	cv::Mat findContoursInput = hslThresholdOutput;
+	cv::Mat findContoursInput = cvDilateOutput;
 	bool findContoursExternalOnly = false;  // default Boolean
 	findContours(findContoursInput, findContoursExternalOnly, this->findContoursOutput);
 	//Step Filter_Contours0:
@@ -57,6 +75,20 @@ cv::Mat* GripAreaPipeline::GetResizeImageOutput(){
  */
 cv::Mat* GripAreaPipeline::GetHslThresholdOutput(){
 	return &(this->hslThresholdOutput);
+}
+/**
+ * This method is a generated getter for the output of a CV_erode.
+ * @return Mat output from CV_erode.
+ */
+cv::Mat* GripAreaPipeline::GetCvErodeOutput(){
+	return &(this->cvErodeOutput);
+}
+/**
+ * This method is a generated getter for the output of a CV_dilate.
+ * @return Mat output from CV_dilate.
+ */
+cv::Mat* GripAreaPipeline::GetCvDilateOutput(){
+	return &(this->cvDilateOutput);
 }
 /**
  * This method is a generated getter for the output of a Find_Contours.
@@ -98,6 +130,34 @@ std::vector<std::vector<cv::Point> >* GripAreaPipeline::GetFilterContoursOutput(
 	void GripAreaPipeline::hslThreshold(cv::Mat &input, double hue[], double sat[], double lum[], cv::Mat &out) {
 		cv::cvtColor(input, out, cv::COLOR_BGR2HLS);
 		cv::inRange(out, cv::Scalar(hue[0], lum[0], sat[0]), cv::Scalar(hue[1], lum[1], sat[1]), out);
+	}
+
+	/**
+	 * Expands area of lower value in an image.
+	 * @param src the Image to erode.
+	 * @param kernel the kernel for erosion.
+	 * @param anchor the center of the kernel.
+	 * @param iterations the number of times to perform the erosion.
+	 * @param borderType pixel extrapolation method.
+	 * @param borderValue value to be used for a constant border.
+	 * @param dst Output Image.
+	 */
+	void GripAreaPipeline::cvErode(cv::Mat &src, cv::Mat &kernel, cv::Point &anchor, double iterations, int borderType, cv::Scalar &borderValue, cv::Mat &dst) {
+		cv::erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
+	}
+
+	/**
+	 * Expands area of higher value in an image.
+	 * @param src the Image to dilate.
+	 * @param kernel the kernel for dilation.
+	 * @param anchor the center of the kernel.
+	 * @param iterations the number of times to perform the dilation.
+	 * @param borderType pixel extrapolation method.
+	 * @param borderValue value to be used for a constant border.
+	 * @param dst Output Image.
+	 */
+	void GripAreaPipeline::cvDilate(cv::Mat &src, cv::Mat &kernel, cv::Point &anchor, double iterations, int borderType, cv::Scalar &borderValue, cv::Mat &dst) {
+		cv::dilate(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
 	}
 
 	/**

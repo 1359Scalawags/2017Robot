@@ -30,7 +30,7 @@ public:
 		DoorControl(Door_Servo_ID),
 		state(closing)
 	{
-
+		DoorControl.Set(Servo_Closed);
 	}
 	void TeleOp(){
 		SetServo();
@@ -39,22 +39,20 @@ public:
 		if(state == DoorState::opening){
 			if(DoorControl.Get() == Servo_Open){
 				state = DoorState::open;
-			}else{
-				DoorControl.Set(Servo_Open);
 			}
 		}else if(state == DoorState::closing){
 			if(DoorControl.Get() == Servo_Closed){
 				state = DoorState::closed;
-			}else{
-				DoorControl.Set(Servo_Closed);
 			}
 		}else if(state == DoorState::open){
-			if(Estick->GetRawButton(Door_Button_ID)){
+			if(Estick->GetRawButton(DoorClose_Button_ID)){
 				state = DoorState::closing;
+				DoorControl.Set(Servo_Closed);
 			}
 		}else if(state == DoorState::closed){
-			if(Estick->GetRawButton(Door_Button_ID)){
+			if(Estick->GetRawButton(DoorOpen_Button_ID)){
 				state = DoorState::opening;
+				DoorControl.Set(Servo_Open);
 			}
 		}
 	}

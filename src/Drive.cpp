@@ -26,7 +26,7 @@ private:
 
 
 public:
-	//std::shared_ptr<NetworkTable> table;
+	std::shared_ptr<NetworkTable> table;
 
 	Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 			Lstick(Left_Joystick_Port),
@@ -65,7 +65,7 @@ public:
 		}else{
 			setDriveSpeed(Smult);
 		}
-		//TargetTrack();
+		TargetTrack();
 	}
 
 	void setDriveSpeed(float multiplier){
@@ -84,22 +84,22 @@ public:
 		return input;
 	}
 
-	/*inline float TargetTrack(){
+	inline float TargetTrack(){
 			//auto gap = NetworkTable::GetTable("grip");
 		//gap.Process()
 			table = NetworkTable::GetTable("GRIP/myContoursReport");
 		       std::vector<double> areas = table->GetNumberArray("area", llvm::ArrayRef<double>());
 
 		       SmartDashboard::PutNumber("TARGETS_FOUND", areas.size());
-		       double totalArea = 0;
+		       /*double totalArea = 0;
 		       for (uint i = 0; i < areas.size(); i++){
 		    	   totalArea = totalArea + areas[i];
-		       }
+		       }*/
 
 		       return 0;
 
 		        // Pick whatever target has the biggest area
-		        double targetArea = -1.0, targetX = 0.0;
+		        /*double targetArea = -1.0, targetX = 0.0;
 		        for (uint i = 0; i < areas.size(); i++) {
 		            if (areas[i] > targetArea) {
 		                targetArea = areas[i];
@@ -124,8 +124,8 @@ public:
 		        } else {
 		            //ShootBoulder();
 		            return 0;
-		        }
-		    }*/
+		        }*/
+		    }
 
 };
 

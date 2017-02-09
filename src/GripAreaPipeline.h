@@ -23,10 +23,14 @@ class GripAreaPipeline {
 	private:
 		cv::Mat resizeImageOutput;
 		cv::Mat hslThresholdOutput;
+		cv::Mat cvErodeOutput;
+		cv::Mat cvDilateOutput;
 		std::vector<std::vector<cv::Point> > findContoursOutput;
 		std::vector<std::vector<cv::Point> > filterContoursOutput;
 		void resizeImage(cv::Mat &, double , double , int , cv::Mat &);
 		void hslThreshold(cv::Mat &, double [], double [], double [], cv::Mat &);
+		void cvErode(cv::Mat &, cv::Mat &, cv::Point &, double , int , cv::Scalar &, cv::Mat &);
+		void cvDilate(cv::Mat &, cv::Mat &, cv::Point &, double , int , cv::Scalar &, cv::Mat &);
 		void findContours(cv::Mat &, bool , std::vector<std::vector<cv::Point> > &);
 		void filterContours(std::vector<std::vector<cv::Point> > &, double , double , double , double , double , double , double [], double , double , double , double , std::vector<std::vector<cv::Point> > &);
 
@@ -35,6 +39,8 @@ class GripAreaPipeline {
 		void Process(cv::Mat& source0);
 		cv::Mat* GetResizeImageOutput();
 		cv::Mat* GetHslThresholdOutput();
+		cv::Mat* GetCvErodeOutput();
+		cv::Mat* GetCvDilateOutput();
 		std::vector<std::vector<cv::Point> >* GetFindContoursOutput();
 		std::vector<std::vector<cv::Point> >* GetFilterContoursOutput();
 };
