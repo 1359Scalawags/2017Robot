@@ -34,6 +34,11 @@ class Robot: public frc::SampleRobot {
 	GearHandler handler;
 	Climber climber;
 
+	frc::SendableChooser<int*> chooser;
+	int left = 0;
+	int middle = 1;
+	int right = 2;
+
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
 
@@ -82,6 +87,11 @@ public:
 
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
+
+		chooser.AddDefault("Middle", &middle);
+		chooser.AddObject("Left", &left);
+		chooser.AddObject("Right", &right);
+		SmartDashboard::PutData("Auton Modes", &chooser);
 
 		/*if(fork() == 0){
 			SmartDashboard::PutString("forked", "yes");
@@ -146,8 +156,24 @@ public:
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 
-	void Autonomous() {
-
+	void Autonomous() override {
+		drive.Safety();
+		drive.AutonStart();
+		int selected = *(chooser.GetSelected());
+		while(IsAutonomous() && IsEnabled()){
+			if(selected == 0){
+				SmartDashboard::PutString("Auto Selector", "Left");
+				drive.AutonLeft();
+			}else if(selected == 1){
+				SmartDashboard::PutString("Auto Selector", "Middle");
+				drive.AutonMiddle();
+			}else if(selected == 2){
+				SmartDashboard::PutString("Auto Selector", "Right");
+				drive.AutonRight();
+			}
+			Wait(0.05);
+			//drive.Auton();
+		}
 		/**
 		auto autoSelected = chooser.GetSelected();
 		// std::string autoSelected = frc::SmartDashboard::GetString("Auto Selector", autoNameDefault);
@@ -192,7 +218,7 @@ public:
 			//int large_angle = (int)(angle * 1000);
 			//angle = (large_angle % 360000) / 1000.0f;
 			//SmartDashboard::PutNumber("GYRO", angle);
-			frc::Wait(0.005);
+			frc::Wait(0.05);
 		}
 	}
 

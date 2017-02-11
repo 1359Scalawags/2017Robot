@@ -26,6 +26,7 @@ const int Right_Joystick_Port = 1;
 const int Extra_Joystick_Port = 2;
 
 static constexpr double kAnglePoint = 0.0;
+//static const float Kp = 0.03;
 
 const int CENTER_X = 160;
 const int TOLERANCE_X = 10;

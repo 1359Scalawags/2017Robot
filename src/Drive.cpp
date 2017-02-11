@@ -21,6 +21,8 @@ private:
 	ADXRS450_Gyro Gyro;
 	AnalogInput Sonar;
 
+	Timer* autoTimer;
+
 	//grip::GripAreaPipeline gap;
 
 
@@ -33,7 +35,8 @@ public:
 			Rstick(Right_Joystick_Port),
 			DriveForward(true),
 			Gyro(),
-			Sonar(0)
+			Sonar(0),
+			autoTimer(new Timer())
 	{
 		mainDrive.SetExpiration(0.1);
 		Sonar.SetAverageBits(4);
@@ -66,6 +69,37 @@ public:
 			setDriveSpeed(Smult);
 		}
 		TargetTrack();
+	}
+
+	void AutonStart() {
+		Gyro.Reset();
+		autoTimer->Reset();
+		autoTimer->Start();
+	}
+
+	void AutonLeft(){
+		float angle = Gyro.GetAngle();
+		if(autoTimer->Get() < 1.5f){
+			mainDrive.ArcadeDrive(.5f, angle * .5f);
+		}else{
+			mainDrive.ArcadeDrive(0.0f, angle * .5f);
+		}
+	}
+	void AutonMiddle(){
+		float angle = Gyro.GetAngle();
+		if(autoTimer->Get() < 1.5f){
+			mainDrive.ArcadeDrive(.5f, angle * .5f);
+		}else{
+			mainDrive.ArcadeDrive(0.0f, angle * .5f);
+		}
+	}
+	void AutonRight(){
+		float angle = Gyro.GetAngle();
+		if(autoTimer->Get() < 1.5f){
+			mainDrive.ArcadeDrive(.5f, angle * .5f);
+		}else{
+			mainDrive.ArcadeDrive(0.0f, angle * .5f);
+		}
 	}
 
 	void setDriveSpeed(float multiplier){
