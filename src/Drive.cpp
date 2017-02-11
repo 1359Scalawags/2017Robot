@@ -23,6 +23,12 @@ private:
 
 	Timer* autoTimer;
 
+	float last_arcade_speed = 0;
+	float last_rotate_speed = 0;
+	float last_left_speed = 0;
+	float last_right_speed = 0;
+
+
 	//grip::GripAreaPipeline gap;
 
 
@@ -78,12 +84,7 @@ public:
 	}
 
 	void AutonLeft(){
-		float angle = Gyro.GetAngle();
-		if(autoTimer->Get() < 1.5f){
-			mainDrive.ArcadeDrive(.5f, angle * .5f);
-		}else{
-			mainDrive.ArcadeDrive(0.0f, angle * .5f);
-		}
+		TurnToAngle(90);
 	}
 	void AutonMiddle(){
 		float angle = Gyro.GetAngle();
@@ -94,12 +95,54 @@ public:
 		}
 	}
 	void AutonRight(){
-		float angle = Gyro.GetAngle();
-		if(autoTimer->Get() < 1.5f){
-			mainDrive.ArcadeDrive(.5f, angle * .5f);
+		TurnToAngle(-90);
+	}
+
+	void TurnToAngle(float targetAngle){
+		float angle = Gyro.GetAngle() - targetAngle;
+				if(angle > 10.0f * ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, .75f);
+				}else if(angle > ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, 0.3f);
+				}else if(angle < -10.0f * ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, -0.75);
+				}else if(angle < -ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, -0.3f);
+				}else{
+					mainDrive.ArcadeDrive(0.0f, 0.0f);
+				}
+	}
+
+	void TankDrive(float target_left, float target_right){
+		last_rotate_speed = 0;
+		last_arcade_speed = 0;
+		if(target_left == 0){
+			last_left_speed = 0;
 		}else{
-			mainDrive.ArcadeDrive(0.0f, angle * .5f);
+			last_left_speed = (target_left + last_left_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
 		}
+		if(target_right == 0){
+			last_right_speed = 0;
+		}else{
+			last_right_speed = (target_right + last_right_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
+		}
+		mainDrive.TankDrive(last_left_speed, last_right_speed);
+	}
+
+	void ArcadeDrive(float target_speed, float rotate_speed){
+		last_left_speed = 0;
+		last_right_speed = 0;
+		if(target_speed == 0){
+			last_arcade_speed = 0;
+		}else{
+			last_arcade_speed = (target_speed + last_arcade_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
+		}
+		if(rotate_speed == 0){
+			last_rotate_speed = 0;
+		}else{
+			last_rotate_speed = (rotate_speed + last_rotate_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
+		}
+		mainDrive.ArcadeDrive(last_arcade_speed, last_rotate_speed);
 	}
 
 	void setDriveSpeed(float multiplier){

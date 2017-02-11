@@ -26,7 +26,7 @@ const int Right_Joystick_Port = 1;
 const int Extra_Joystick_Port = 2;
 
 static constexpr double kAnglePoint = 0.0;
-//static const float Kp = 0.03;
+static const float ROTATE_TOLERANCE = 0.5f;
 
 const int CENTER_X = 160;
 const int TOLERANCE_X = 10;
@@ -41,6 +41,8 @@ const int DoorClose_Button_ID = 2;
 
 const float Servo_Open = 0.0f;
 const float Servo_Closed = 1.0f;
+
+const float AVERAGE_WEIGHT = 5;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;

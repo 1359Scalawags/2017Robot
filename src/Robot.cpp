@@ -87,7 +87,7 @@ public:
 		chooser.AddDefault("Middle", &middle);
 		chooser.AddObject("Left", &left);
 		chooser.AddObject("Right", &right);
-		SmartDashboard::PutData("Auton Modes", &chooser);
+		SmartDashboard::PutData("AutonModes", &chooser);
 
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
@@ -164,13 +164,13 @@ public:
 		int selected = *(chooser.GetSelected());
 		while(IsAutonomous() && IsEnabled()){
 			if(selected == 0){
-				SmartDashboard::PutString("Auto Selector", "Left");
+				SmartDashboard::PutString("AutoSelector", "Left");
 				drive.AutonLeft();
 			}else if(selected == 1){
-				SmartDashboard::PutString("Auto Selector", "Middle");
+				SmartDashboard::PutString("AutoSelector", "Middle");
 				drive.AutonMiddle();
 			}else if(selected == 2){
-				SmartDashboard::PutString("Auto Selector", "Right");
+				SmartDashboard::PutString("AutoSelector", "Right");
 				drive.AutonRight();
 			}
 			Wait(0.05);
