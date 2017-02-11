@@ -84,14 +84,15 @@ public:
 		/*CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
 		CameraServer::GetInstance()->StartAutomaticCapture();*/
 
-
-		std::thread visionThread(VisionThread);
-		visionThread.detach();
-
 		chooser.AddDefault("Middle", &middle);
 		chooser.AddObject("Left", &left);
 		chooser.AddObject("Right", &right);
 		SmartDashboard::PutData("Auton Modes", &chooser);
+
+		std::thread visionThread(VisionThread);
+		visionThread.detach();
+
+
 
 		/*if(fork() == 0){
 			SmartDashboard::PutString("forked", "yes");
@@ -121,6 +122,7 @@ public:
 		            //std::vector<std::vector<cv::Point>>* output = gap.GetFilterContoursOutput();
 		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
 		            outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
+		            Wait(.05);
 		        }
 
 	}

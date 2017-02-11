@@ -18,16 +18,16 @@ void GripAreaPipeline::Process(cv::Mat& source0){
 	//Step HSL_Threshold0:
 	//input
 	cv::Mat hslThresholdInput = resizeImageOutput;
-	double hslThresholdHue[] = {0.0, 180.0};
-	double hslThresholdSaturation[] = {0.0, 255.0};
-	double hslThresholdLuminance[] = {213.70056497175142, 255.0};
+	double hslThresholdHue[] = {57.6271186440678, 112.62032085561496};
+	double hslThresholdSaturation[] = {168.07909604519773, 255.0};
+	double hslThresholdLuminance[] = {132.0621468926554, 255.0};
 	hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, this->hslThresholdOutput);
 	//Step CV_erode0:
 	//input
 	cv::Mat cvErodeSrc = hslThresholdOutput;
 	cv::Mat cvErodeKernel;
 	cv::Point cvErodeAnchor(-1, -1);
-	double cvErodeIterations = 4.0;  // default Double
+	double cvErodeIterations = 2.0;  // default Double
     int cvErodeBordertype = cv::BORDER_CONSTANT;
 	cv::Scalar cvErodeBordervalue(-1);
 	cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, this->cvErodeOutput);
@@ -36,7 +36,7 @@ void GripAreaPipeline::Process(cv::Mat& source0){
 	cv::Mat cvDilateSrc = cvErodeOutput;
 	cv::Mat cvDilateKernel;
 	cv::Point cvDilateAnchor(-1, -1);
-	double cvDilateIterations = 4.0;  // default Double
+	double cvDilateIterations = 2.0;  // default Double
     int cvDilateBordertype = cv::BORDER_CONSTANT;
 	cv::Scalar cvDilateBordervalue(-1);
 	cvDilate(cvDilateSrc, cvDilateKernel, cvDilateAnchor, cvDilateIterations, cvDilateBordertype, cvDilateBordervalue, this->cvDilateOutput);
@@ -48,13 +48,13 @@ void GripAreaPipeline::Process(cv::Mat& source0){
 	//Step Filter_Contours0:
 	//input
 	std::vector<std::vector<cv::Point> > filterContoursContours = findContoursOutput;
-	double filterContoursMinArea = 100.0;  // default Double
+	double filterContoursMinArea = 50.0;  // default Double
 	double filterContoursMinPerimeter = 0.0;  // default Double
 	double filterContoursMinWidth = 0.0;  // default Double
 	double filterContoursMaxWidth = 1000.0;  // default Double
 	double filterContoursMinHeight = 0.0;  // default Double
 	double filterContoursMaxHeight = 1000.0;  // default Double
-	double filterContoursSolidity[] = {0, 100};
+	double filterContoursSolidity[] = {26.365348399246702, 100};
 	double filterContoursMaxVertices = 1000000.0;  // default Double
 	double filterContoursMinVertices = 0.0;  // default Double
 	double filterContoursMinRatio = 0.0;  // default Double
