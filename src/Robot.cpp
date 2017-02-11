@@ -7,6 +7,7 @@
 #include <FuelHopper.cpp>
 #include <GearHandler.cpp>
 #include <Climber.cpp>
+#include <GripAreaPipeline.h>
 
 //NOTE: Its ok to delet setSource method in the grip pipline
 /**
@@ -92,6 +93,7 @@ public:
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
 
+		drive.DriveInit();
 
 
 		/*if(fork() == 0){
@@ -122,7 +124,7 @@ public:
 		            //std::vector<std::vector<cv::Point>>* output = gap.GetFilterContoursOutput();
 		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
 		            outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
-		            Wait(.05);
+		            Wait(.5);
 		        }
 
 	}

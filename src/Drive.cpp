@@ -50,6 +50,10 @@ public:
 
 	}
 
+	void DriveInit(){
+		table = NetworkTable::GetTable("GRIP/myContoursReport");
+	}
+
 	void Safety(){
 		mainDrive.SetSafetyEnabled(true);
 		Gyro.Reset();
@@ -164,7 +168,7 @@ public:
 	inline float TargetTrack(){
 			//auto gap = NetworkTable::GetTable("grip");
 		//gap.Process()
-			table = NetworkTable::GetTable("GRIP/myContoursReport");
+			//table = NetworkTable::GetTable("GRIP/myContoursReport");
 		       std::vector<double> areas = table->GetNumberArray("area", llvm::ArrayRef<double>());
 
 		       SmartDashboard::PutNumber("TARGETS_FOUND", areas.size());
