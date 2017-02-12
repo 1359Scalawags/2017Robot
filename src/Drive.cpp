@@ -78,7 +78,7 @@ public:
 		}else{
 			setDriveSpeed(Smult);
 		}
-		TargetTrack();
+		//TargetTrack();
 	}
 
 	void AutonStart() {
@@ -165,22 +165,30 @@ public:
 		return input;
 	}
 
-	inline float TargetTrack(){
+	float GetTargetCenterX(std::vector<cv::Point> target_x){
+		float center_x = 0;
+		for(uint i = 0; i < target_x.size(); i++){
+			center_x = center_x + target_x[i].x;
+		}
+		return center_x / target_x.size();
+	}
+
+	/*inline float TargetTrack(){
 			//auto gap = NetworkTable::GetTable("grip");
 		//gap.Process()
 			//table = NetworkTable::GetTable("GRIP/myContoursReport");
 		       std::vector<double> areas = table->GetNumberArray("area", llvm::ArrayRef<double>());
 
 		       SmartDashboard::PutNumber("TARGETS_FOUND", areas.size());
-		       /*double totalArea = 0;
+		       double totalArea = 0;
 		       for (uint i = 0; i < areas.size(); i++){
 		    	   totalArea = totalArea + areas[i];
-		       }*/
+		       }
 
 		       return 0;
 
 		        // Pick whatever target has the biggest area
-		        /*double targetArea = -1.0, targetX = 0.0;
+		        double targetArea = -1.0, targetX = 0.0;
 		        for (uint i = 0; i < areas.size(); i++) {
 		            if (areas[i] > targetArea) {
 		                targetArea = areas[i];
@@ -205,8 +213,8 @@ public:
 		        } else {
 		            //ShootBoulder();
 		            return 0;
-		        }*/
-		    }
+		        }
+		    }*/
 
 };
 

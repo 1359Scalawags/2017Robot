@@ -23,6 +23,7 @@
  * instead if you're new.
  */
 
+static std::vector<std::vector<cv::Point>>* ContourOutput;
 
 class Robot: public frc::SampleRobot {
 
@@ -121,10 +122,11 @@ public:
 		        while(true) {
 		            cvSink.GrabFrame(source);
 		            gap.Process(source);
-		            //std::vector<std::vector<cv::Point>>* output = gap.GetFilterContoursOutput();
+		            ContourOutput = gap.GetFilterContoursOutput();
+
 		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
 		            outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
-		            Wait(.5);
+		            Wait(0.03);
 		        }
 
 	}
@@ -175,7 +177,9 @@ public:
 				SmartDashboard::PutString("AutoSelector", "Right");
 				drive.AutonRight();
 			}
-			Wait(0.05);
+			SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());
+			SmartDashboard::PutNumber("TargetCenter:", drive.GetTargetCenterX(*ContourOutput[0].data()));
+			Wait(0.005);
 			//drive.Auton();
 		}
 		/**
