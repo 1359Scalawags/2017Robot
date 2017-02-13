@@ -34,7 +34,7 @@ private:
 
 
 public:
-	std::shared_ptr<NetworkTable> table;
+	//std::shared_ptr<NetworkTable> table;
 
 	Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 			Lstick(Left_Joystick_Port),
@@ -50,15 +50,27 @@ public:
 
 	}
 
-	void DriveInit(){
+	/*void DriveInit(){
 		table = NetworkTable::GetTable("GRIP/myContoursReport");
-	}
+	}*/
 
-	void Safety(){
-		mainDrive.SetSafetyEnabled(true);
+	void GyroReset(){
 		Gyro.Reset();
 	}
+	void Safety(){
+		mainDrive.SetSafetyEnabled(true);
+	}
 
+	bool DriveToDistance(float Distance){
+		if(Sonar.GetAverageValue() >= Distance){
+			mainDrive.ArcadeDrive(0.0f, 0.0f);
+			return true;
+		}else{
+			float angle = Gyro.GetAngle();
+			mainDrive.ArcadeDrive(.5f, angle * .5f);
+			return false;
+		}
+	}
 
 	void TeleOp(){
 		float angle = Gyro.GetAngle();
@@ -71,12 +83,12 @@ public:
 		double Sdis = Sonar.GetAverageValue();
 		SmartDashboard::PutNumber("SONAR", Sdis);
 
-		float Smult = 0.0005333 * Sdis + 0.4666;
+		//float Smult = 0.0005333 * Sdis + 0.4666;
 
 		if(Sdis <= 500){
-			setDriveSpeed(Smult);
+			setDriveSpeed(1.0);
 		}else{
-			setDriveSpeed(Smult);
+			setDriveSpeed(1.0);
 		}
 		//TargetTrack();
 	}
@@ -102,7 +114,7 @@ public:
 		TurnToAngle(-90);
 	}
 
-	void TurnToAngle(float targetAngle){
+	bool TurnToAngle(float targetAngle){
 		float angle = Gyro.GetAngle() - targetAngle;
 				if(angle > 10.0f * ROTATE_TOLERANCE){
 					ArcadeDrive(0.0f, .75f);
@@ -114,7 +126,9 @@ public:
 					ArcadeDrive(0.0f, -0.3f);
 				}else{
 					mainDrive.ArcadeDrive(0.0f, 0.0f);
+					return true;
 				}
+				return false;
 	}
 
 	void TankDrive(float target_left, float target_right){
@@ -150,8 +164,8 @@ public:
 	}
 
 	void setDriveSpeed(float multiplier){
-		float LeftStickValue = multiplier * .75 * (-getJoystickTransform(Lstick.GetY()));
-		float RightStickValue = multiplier * .75 * (-getJoystickTransform(Rstick.GetY()));
+		float LeftStickValue = multiplier * .75 * (-Lstick.GetY());
+		float RightStickValue = multiplier * .75 * (-Rstick.GetY());
 
 
 		if(DriveForward == true){
@@ -161,9 +175,9 @@ public:
 		}
 	}
 
-	float getJoystickTransform(float input){
+	/*float getJoystickTransform(float input){
 		return input;
-	}
+	}*/
 
 	float GetTargetCenterX(std::vector<cv::Point> target_x){
 		float center_x = 0;
@@ -171,6 +185,10 @@ public:
 			center_x = center_x + target_x[i].x;
 		}
 		return center_x / target_x.size();
+	}
+
+	void TrackTarget(){
+
 	}
 
 	/*inline float TargetTrack(){

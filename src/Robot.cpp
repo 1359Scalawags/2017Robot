@@ -40,6 +40,7 @@ class Robot: public frc::SampleRobot {
 	int left = 0;
 	int middle = 1;
 	int right = 2;
+	int track = 3;
 
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
@@ -89,12 +90,13 @@ public:
 		chooser.AddDefault("Middle", &middle);
 		chooser.AddObject("Left", &left);
 		chooser.AddObject("Right", &right);
+		chooser.AddObject("Tracking", &track);
 		SmartDashboard::PutData("AutonModes", &chooser);
 
 		std::thread visionThread(VisionThread);
 		visionThread.detach();
 
-		drive.DriveInit();
+		//drive.DriveInit();
 
 
 		/*if(fork() == 0){
@@ -114,7 +116,7 @@ public:
 	static void VisionThread(){
 		grip::GripAreaPipeline gap;
 		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
-		        camera.SetResolution(320, 240);
+		        camera.SetResolution(640, 480);
 		        cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
 		        cs::CvSource outputStreamStd = CameraServer::GetInstance()->PutVideo("Gray", 640, 480);
 		        cv::Mat source;
@@ -125,7 +127,7 @@ public:
 		            ContourOutput = gap.GetFilterContoursOutput();
 
 		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
-		            outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
+		            //outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
 		            Wait(0.03);
 		        }
 
@@ -176,6 +178,9 @@ public:
 			}else if(selected == 2){
 				SmartDashboard::PutString("AutoSelector", "Right");
 				drive.AutonRight();
+			}else if(selected ==3){
+				SmartDashboard::PutString("AutoSelector", "Tracking");
+				drive.TrackTarget();
 			}
 			SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());
 			SmartDashboard::PutNumber("TargetCenter:", drive.GetTargetCenterX(*ContourOutput[0].data()));
