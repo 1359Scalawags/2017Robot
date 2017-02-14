@@ -1,7 +1,7 @@
 #include <Constants.h>
 #include "WPILib.h"
-#include <Drive.cpp>
-#include <GearHandler.cpp>
+#include <Drive.h>
+#include <GearHandler.h>
 /*
  * Autonomous.cpp
  *
@@ -48,6 +48,9 @@ public:
 			RotateAngle = -120;
 		}
 	}
+	void Auton(){
+
+	}
 	void DriveForward(){
 		if(drive->DriveToDistance(DisFromWall)){
 			//go to next phase
@@ -67,3 +70,19 @@ public:
 };
 
 
+/*
+
+		int selected = *(chooser.GetSelected());
+if(selected == 0){
+				SmartDashboard::PutString("AutoSelector", "Left");
+				drive.AutonLeft();
+			}else if(selected == 1){
+				SmartDashboard::PutString("AutoSelector", "Middle");
+				drive.AutonMiddle();
+			}else if(selected == 2){
+				SmartDashboard::PutString("AutoSelector", "Right");
+				drive.AutonRight();
+			}else if(selected ==3){
+				SmartDashboard::PutString("AutoSelector", "Tracking");
+				drive.TrackTarget();
+			}*/

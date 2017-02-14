@@ -3,34 +3,21 @@
 #include <Constants.h>
 #include <ADXRS450_Gyro.h>
 #include <cmath>
-#include <Drive.cpp>
+#include <Drive.h>
 #include <FuelHopper.cpp>
-#include <GearHandler.cpp>
+#include <GearHandler.h>
 #include <Climber.cpp>
 #include <GripAreaPipeline.h>
+#include <Vision.cpp>
+#include <Autonomous.cpp>
 
-//NOTE: Its ok to delet setSource method in the grip pipline
-/**
- * This is a demo program showing the use of the RobotDrive class.
- * The SampleRobot class is the base of a robot application that will
- * automatically call your Autonomous and OperatorControl methods at the right
- * time as controlled by the switches on the driver station or the field
- * controls.
- *
- * WARNING: While it may look like a good choice to use for your code if you're
- * inexperienced, don't. Unless you know what you are doing, complex code will
- * be much more difficult under this system. Use IterativeRobot or Command-Based
- * instead if you're new.
- */
 
-static std::vector<std::vector<cv::Point>>* ContourOutput;
+
+
 
 class Robot: public frc::SampleRobot {
 
-	//RobotDrive mainDrive;
 	Drive drive;
-	//Joystick Lstick;
-	//Joystick Rstick;
 	Joystick Estick;
 	FuelHopper hopper;
 	GearHandler handler;
@@ -46,22 +33,12 @@ class Robot: public frc::SampleRobot {
 	//ADXRS450_Gyro Gyro;
 
 
-	/*
-	frc::RobotDrive myRobot { 0, 1 }; // robot drive system
-	frc::Joystick stick { 0 }; // only joystick
-	frc::SendableChooser<std::string> chooser;
-	const std::string autoNameDefault = "Default";
-	const std::string autoNameCustom = "My Auto";
-	*/
 
 public:
 
 
 
-	Robot() : //mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
-		//Lstick(Left_Joystick_Port),
-		//Rstick(Right_Joystick_Port),
-		//DriveForward(true),
+	Robot() :
 		drive(),
 		Estick(Extra_Joystick_Port),
 		hopper(&Estick),
@@ -93,7 +70,7 @@ public:
 		chooser.AddObject("Tracking", &track);
 		SmartDashboard::PutData("AutonModes", &chooser);
 
-		std::thread visionThread(VisionThread);
+		std::thread visionThread(Vision::VisionThread);
 		visionThread.detach();
 
 		//drive.DriveInit();
@@ -113,25 +90,7 @@ public:
 
 	}
 
-	static void VisionThread(){
-		grip::GripAreaPipeline gap;
-		cs::UsbCamera camera = CameraServer::GetInstance()->StartAutomaticCapture();
-		        camera.SetResolution(640, 480);
-		        cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
-		        cs::CvSource outputStreamStd = CameraServer::GetInstance()->PutVideo("Gray", 640, 480);
-		        cv::Mat source;
-		        cv::Mat output;
-		        while(true) {
-		            cvSink.GrabFrame(source);
-		            gap.Process(source);
-		            ContourOutput = gap.GetFilterContoursOutput();
 
-		            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
-		            //outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
-		            Wait(0.03);
-		        }
-
-	}
 
 	/*void RobotInit() {
 
@@ -152,68 +111,21 @@ public:
 
 		}*/
 
-	/*
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * GetString line to get the auto name from the text box below the Gyro.
-	 *
-	 * You can add additional auto modes by adding additional comparisons to the
-	 * if-else structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
+
 
 	void Autonomous() override {
 		drive.Safety();
 		drive.AutonStart();
-		int selected = *(chooser.GetSelected());
 		while(IsAutonomous() && IsEnabled()){
-			if(selected == 0){
-				SmartDashboard::PutString("AutoSelector", "Left");
-				drive.AutonLeft();
-			}else if(selected == 1){
-				SmartDashboard::PutString("AutoSelector", "Middle");
-				drive.AutonMiddle();
-			}else if(selected == 2){
-				SmartDashboard::PutString("AutoSelector", "Right");
-				drive.AutonRight();
-			}else if(selected ==3){
-				SmartDashboard::PutString("AutoSelector", "Tracking");
-				drive.TrackTarget();
-			}
-			SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());
-			SmartDashboard::PutNumber("TargetCenter:", drive.GetTargetCenterX(*ContourOutput[0].data()));
-			Wait(0.005);
-			//drive.Auton();
-		}
-		/**
-		auto autoSelected = chooser.GetSelected();
-		// std::string autoSelected = frc::SmartDashboard::GetString("Auto Selector", autoNameDefault);
-		std::cout << "Auto selected: " << autoSelected << std::endl;
 
-		if (autoSelected == autoNameCustom) {
-			// Custom Auto goes here
-			std::cout << "Running custom Autonomous" << std::endl;
-			myRobot.SetSafetyEnabled(false);
-			myRobot.Drive(-0.5, 1.0); // spin at half speed
-			frc::Wait(2.0);                // for 2 seconds
-			myRobot.Drive(0.0, 0.0);  // stop robot
-		} else {
-			// Default Auto goes here
-			std::cout << "Running default Autonomous" << std::endl;
-			myRobot.SetSafetyEnabled(false);
-			myRobot.Drive(-0.5, 0.0); // drive forwards half speed
-			frc::Wait(2.0);                // for 2 seconds
-			myRobot.Drive(0.0, 0.0);  // stop robot
+			Wait(0.005);
+
 		}
-		**/
+
 
 	}
 
-	/*
-	 * Runs the motors with arcade steering.
-	 */
+
 
 	void OperatorControl() override {
 //		mainDrive.SetSafetyEnabled(true);
@@ -253,9 +165,7 @@ public:
 
 	}
 
-	/*
-	 * Runs during test mode
-	 */
+
 
 	void Test() override {
 

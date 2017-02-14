@@ -6,40 +6,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
+#include <Drive.h>
 
 // Drive.cpp  Created on: Jan 27, 2017      Author: Destin
 
-class Drive{
 
-private:
-	RobotDrive mainDrive;
-
-	Joystick Lstick;
-	Joystick Rstick;
-
-	bool DriveForward;
-
-	ADXRS450_Gyro Gyro;
-	AnalogInput Sonar;
-
-	Timer* autoTimer;
-
-	float last_arcade_speed = 0;
-	float last_rotate_speed = 0;
-	float last_left_speed = 0;
-	float last_right_speed = 0;
-
-	float Drive_straight = 0;
-
-
-	//grip::GripAreaPipeline gap;
-
-
-
-public:
-	//std::shared_ptr<NetworkTable> table;
-
-	Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
+	Drive::Drive() : mainDrive(LeftA_Motor_ID, LeftB_Motor_ID, RightA_Motor_ID, RightB_Motor_ID),
 			Lstick(Left_Joystick_Port),
 			Rstick(Right_Joystick_Port),
 			DriveForward(true),
@@ -54,18 +26,26 @@ public:
 
 	}
 
+	void Drive::SetRobotFront(){
+		if(Lstick.GetRawButton(DriveForward_Button_ID) || Rstick.GetRawButton(DriveForward_Button_ID)){
+			DriveForward = true;
+		}else if(Lstick.GetRawButton(DriveBackward_Button_ID) || Rstick.GetRawButton(DriveBackward_Button_ID)){
+			DriveForward = false;
+		}
+	}
+
 	/*void DriveInit(){
 		table = NetworkTable::GetTable("GRIP/myContoursReport");
 	}*/
 
-	void GyroReset(){
+	void Drive::GyroReset(){
 		Gyro.Reset();
 	}
-	void Safety(){
+	void Drive::Safety(){
 		mainDrive.SetSafetyEnabled(true);
 	}
 
-	bool DriveToDistance(float Distance){
+	bool Drive::DriveToDistance(float Distance){
 		if(Sonar.GetAverageValue() >= Distance){
 			mainDrive.ArcadeDrive(0.0f, 0.0f);
 			return true;
@@ -76,38 +56,22 @@ public:
 		}
 	}
 
-	void TeleOp(){
-		//float angle = Gyro.GetAngle();
+	void Drive::TeleOp(){
 
-
-		//int large_angle = (int)(angle * 1000);
-		//angle = (large_angle % 360000) / 1000.0f;
-		//SmartDashboard::PutNumber("GYRO", angle);
-
-		//double Sdis = Sonar.GetAverageValue();
-		//SmartDashboard::PutNumber("SONAR", Sdis);
-
-		//float Smult = 0.0005333 * Sdis + 0.4666;
-
-		//if(Sdis <= 500){
-		//	setDriveSpeed(1.0);
-		//}else{
-		//	setDriveSpeed(1.0);
-		//}
-		//TargetTrack();
-		setDriveSpeed(0.5f);
+		SetRobotFront();
+		setDriveSpeed(0.75f);
 	}
 
-	void AutonStart() {
+	void Drive::AutonStart() {
 		Gyro.Reset();
 		autoTimer->Reset();
 		autoTimer->Start();
 	}
 
-	void AutonLeft(){
+	void Drive::AutonLeft(){
 		TurnToAngle(90);
 	}
-	void AutonMiddle(){
+	void Drive::AutonMiddle(){
 		float angle = Gyro.GetAngle();
 		if(autoTimer->Get() < 1.5f){
 			mainDrive.ArcadeDrive(.5f, angle * .5f);
@@ -115,11 +79,11 @@ public:
 			mainDrive.ArcadeDrive(0.0f, angle * .5f);
 		}
 	}
-	void AutonRight(){
+	void Drive::AutonRight(){
 		TurnToAngle(-90);
 	}
 
-	bool TurnToAngle(float targetAngle){
+	bool Drive::TurnToAngle(float targetAngle){
 		float angle = Gyro.GetAngle() - targetAngle;
 				if(angle > 10.0f * ROTATE_TOLERANCE){
 					ArcadeDrive(0.0f, .75f);
@@ -136,7 +100,7 @@ public:
 				return false;
 	}
 
-	void TankDrive(float target_left, float target_right){
+	void Drive::TankDrive(float target_left, float target_right){
 		last_rotate_speed = 0;
 		last_arcade_speed = 0;
 		if(target_left == 0){
@@ -152,7 +116,7 @@ public:
 		mainDrive.TankDrive(last_left_speed, last_right_speed);
 	}
 
-	void ArcadeDrive(float target_speed, float rotate_speed){
+	void Drive::ArcadeDrive(float target_speed, float rotate_speed){
 		last_left_speed = 0;
 		last_right_speed = 0;
 		if(target_speed == 0){
@@ -168,7 +132,7 @@ public:
 		mainDrive.ArcadeDrive(last_arcade_speed, last_rotate_speed);
 	}
 
-	void setDriveSpeed(float multiplier){
+	void Drive::setDriveSpeed(float multiplier){
 		float LeftStickValue = multiplier * .75 * (-Lstick.GetY());
 		float RightStickValue = multiplier * .75 * (-Rstick.GetY());
 
@@ -197,7 +161,7 @@ public:
 		return input;
 	}*/
 
-	float GetTargetCenterX(std::vector<cv::Point> target_x){
+	float Drive::GetTargetCenterX(std::vector<cv::Point> target_x){
 		float center_x = 0;
 		for(uint i = 0; i < target_x.size(); i++){
 			center_x = center_x + target_x[i].x;
@@ -205,7 +169,7 @@ public:
 		return center_x / target_x.size();
 	}
 
-	void TrackTarget(){
+	void Drive::TrackTarget(){
 
 	}
 
@@ -252,6 +216,5 @@ public:
 		        }
 		    }*/
 
-};
 
 

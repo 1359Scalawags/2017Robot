@@ -3,6 +3,7 @@
 #include <VictorSP.h>
 #include <Servo.h>
 #include <Joystick.h>
+#include <GearHandler.h>
 /*
  * GearHandler.cpp
  *
@@ -10,32 +11,18 @@
  *      Author: Destin
  */
 
-enum DoorState{
-	open = 0,
-	closed = 1,
-	opening = 2,
-	closing = 3
-};
 
-class GearHandler{
-private:
-	Joystick* Estick;
-	Servo DoorControl;
-	DoorState state;
-
-
-public:
-	GearHandler(Joystick* Ejoy):
+	GearHandler::GearHandler(Joystick* Ejoy):
 		Estick(Ejoy),
 		DoorControl(Door_Servo_ID),
 		state(closing)
 	{
 		DoorControl.Set(Servo_Closed);
 	}
-	void TeleOp(){
+	void GearHandler::TeleOp(){
 		SetServo();
 	}
-	inline void SetServo(){
+	inline void GearHandler::SetServo(){
 		if(state == DoorState::opening){
 			if(DoorControl.Get() == Servo_Open){
 				state = DoorState::open;
@@ -56,6 +43,5 @@ public:
 			}
 		}
 	}
-};
 
 
