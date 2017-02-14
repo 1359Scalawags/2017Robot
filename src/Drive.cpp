@@ -5,6 +5,7 @@
 #include <GripAreaPipeline.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <math.h>
 
 // Drive.cpp  Created on: Jan 27, 2017      Author: Destin
 
@@ -28,6 +29,8 @@ private:
 	float last_left_speed = 0;
 	float last_right_speed = 0;
 
+	float Drive_straight = 0;
+
 
 	//grip::GripAreaPipeline gap;
 
@@ -42,7 +45,8 @@ public:
 			DriveForward(true),
 			Gyro(),
 			Sonar(0),
-			autoTimer(new Timer())
+			autoTimer(new Timer()),
+			Drive_straight(0)
 	{
 		mainDrive.SetExpiration(0.1);
 		Sonar.SetAverageBits(4);
@@ -73,24 +77,25 @@ public:
 	}
 
 	void TeleOp(){
-		float angle = Gyro.GetAngle();
+		//float angle = Gyro.GetAngle();
 
 
-		int large_angle = (int)(angle * 1000);
-		angle = (large_angle % 360000) / 1000.0f;
-		SmartDashboard::PutNumber("GYRO", angle);
+		//int large_angle = (int)(angle * 1000);
+		//angle = (large_angle % 360000) / 1000.0f;
+		//SmartDashboard::PutNumber("GYRO", angle);
 
-		double Sdis = Sonar.GetAverageValue();
-		SmartDashboard::PutNumber("SONAR", Sdis);
+		//double Sdis = Sonar.GetAverageValue();
+		//SmartDashboard::PutNumber("SONAR", Sdis);
 
 		//float Smult = 0.0005333 * Sdis + 0.4666;
 
-		if(Sdis <= 500){
-			setDriveSpeed(1.0);
-		}else{
-			setDriveSpeed(1.0);
-		}
+		//if(Sdis <= 500){
+		//	setDriveSpeed(1.0);
+		//}else{
+		//	setDriveSpeed(1.0);
+		//}
 		//TargetTrack();
+		setDriveSpeed(0.5f);
 	}
 
 	void AutonStart() {
@@ -167,12 +172,25 @@ public:
 		float LeftStickValue = multiplier * .75 * (-Lstick.GetY());
 		float RightStickValue = multiplier * .75 * (-Rstick.GetY());
 
+		/*if(abs(LeftStickValue - RightStickValue) < STRAIT_TOLERANCE){
+			if(Drive_straight == 0){
+				Drive_straight = Gyro.GetAngle();
+			}
+			if(DriveForward == true){
+				ArcadeDrive(((LeftStickValue + RightStickValue) / 2.0f), Drive_straight * .5f);
+			}else{
+				ArcadeDrive(-((LeftStickValue + RightStickValue) / 2.0f), Drive_straight * .5f);
+			}
+		}else{
+			Drive_straight = false;
+
+		}*/
 
 		if(DriveForward == true){
-			mainDrive.TankDrive(LeftStickValue, RightStickValue);
-		}else{
-			mainDrive.TankDrive(-LeftStickValue, RightStickValue);
-		}
+					mainDrive.TankDrive(LeftStickValue, RightStickValue);
+				}else{
+					mainDrive.TankDrive(-LeftStickValue, -RightStickValue);
+				}
 	}
 
 	/*float getJoystickTransform(float input){
