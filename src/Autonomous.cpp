@@ -2,6 +2,7 @@
 #include "WPILib.h"
 #include <Drive.h>
 #include <GearHandler.h>
+#include <Vision.h>
 /*
  * Autonomous.cpp
  *
@@ -62,7 +63,10 @@ public:
 		}
 	}
 	void TrackPeg(){
-//write this later
+		float centerX = Vision::getAverageCenterX();
+		float area = Vision::getLargestArea();
+		SmartDashboard::PutNumber("CenterX", centerX);
+		SmartDashboard::PutNumber("Area", area);
 	}
 	void PlaceGear(){
 

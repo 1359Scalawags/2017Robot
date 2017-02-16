@@ -8,7 +8,7 @@
 #include <GearHandler.h>
 #include <Climber.cpp>
 #include <GripAreaPipeline.h>
-#include <Vision.cpp>
+#include <Vision.h>
 #include <Autonomous.cpp>
 
 
@@ -18,6 +18,7 @@
 class Robot: public frc::SampleRobot {
 
 	Drive drive;
+	Autonomous auton;
 	Joystick Estick;
 	FuelHopper hopper;
 	GearHandler handler;
@@ -40,6 +41,7 @@ public:
 
 	Robot() :
 		drive(),
+		auton(StartingPosition::Middle, &drive, &handler),
 		Estick(Extra_Joystick_Port),
 		hopper(&Estick),
 		handler(&Estick),
@@ -115,9 +117,16 @@ public:
 
 	void Autonomous() override {
 		drive.Safety();
-		drive.AutonStart();
 		while(IsAutonomous() && IsEnabled()){
-
+			int selected = *(chooser.GetSelected());
+			if(selected == 0){
+				drive.AutonLeft();
+			}else if(selected == 1){
+				drive.AutonMiddle();
+			}else if(selected == 2){
+				drive.AutonRight();
+			}else if(selected ==3){
+				drive.TrackTarget();
 			Wait(0.005);
 
 		}

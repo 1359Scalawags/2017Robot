@@ -62,12 +62,6 @@
 		setDriveSpeed(0.75f);
 	}
 
-	void Drive::AutonStart() {
-		Gyro.Reset();
-		autoTimer->Reset();
-		autoTimer->Start();
-	}
-
 	void Drive::AutonLeft(){
 		TurnToAngle(90);
 	}
