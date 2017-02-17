@@ -26,6 +26,11 @@
 
 	}
 
+	void Drive::ResetTimer(){
+		autoTimer->Reset();
+		autoTimer->Start();
+	}
+
 	void Drive::SetRobotFront(){
 		if(Lstick.GetRawButton(DriveForward_Button_ID) || Rstick.GetRawButton(DriveForward_Button_ID)){
 			DriveForward = true;
@@ -62,19 +67,15 @@
 		setDriveSpeed(0.75f);
 	}
 
-	void Drive::AutonLeft(){
-		TurnToAngle(90);
-	}
-	void Drive::AutonMiddle(){
+	bool Drive::DriveStraight(float time){
 		float angle = Gyro.GetAngle();
-		if(autoTimer->Get() < 1.5f){
-			mainDrive.ArcadeDrive(.5f, angle * .5f);
-		}else{
-			mainDrive.ArcadeDrive(0.0f, angle * .5f);
-		}
-	}
-	void Drive::AutonRight(){
-		TurnToAngle(-90);
+			if(autoTimer->Get() < time){
+				ArcadeDrive(.5f, angle * .5f);
+				return false;
+			}else{
+				ArcadeDrive(0.0f, angle * .5f);
+				return true;
+			}
 	}
 
 	bool Drive::TurnToAngle(float targetAngle){

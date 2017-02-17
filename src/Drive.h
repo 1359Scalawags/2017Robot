@@ -54,12 +54,14 @@ public:
 	void AutonLeft();
 	void AutonMiddle();
 	void AutonRight();
+	void ResetTimer();
 	bool TurnToAngle(float targetAngle);
 	void TankDrive(float target_left, float target_right);
 	void ArcadeDrive(float target_speed, float rotate_speed);
 	void setDriveSpeed(float multiplier);
 	float GetTargetCenterX(std::vector<cv::Point> target_x);
 	void TrackTarget();
+	bool DriveStraight(float time);
 };
 
 

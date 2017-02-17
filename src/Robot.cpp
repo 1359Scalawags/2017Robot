@@ -2,6 +2,7 @@
 #include <VictorSP.h>
 #include <Constants.h>
 #include <ADXRS450_Gyro.h>
+#include <AutoProgram.cpp>
 #include <cmath>
 #include <Drive.h>
 #include <FuelHopper.cpp>
@@ -9,7 +10,6 @@
 #include <Climber.cpp>
 #include <GripAreaPipeline.h>
 #include <Vision.h>
-#include <Autonomous.cpp>
 
 
 
@@ -18,7 +18,7 @@
 class Robot: public frc::SampleRobot {
 
 	Drive drive;
-	Autonomous auton;
+	AutoProgram auton;
 	Joystick Estick;
 	FuelHopper hopper;
 	GearHandler handler;
@@ -28,7 +28,7 @@ class Robot: public frc::SampleRobot {
 	int left = 0;
 	int middle = 1;
 	int right = 2;
-	int track = 3;
+	int test = 3;
 
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
@@ -41,7 +41,7 @@ public:
 
 	Robot() :
 		drive(),
-		auton(StartingPosition::Middle, &drive, &handler),
+		auton(&drive, &handler),
 		Estick(Extra_Joystick_Port),
 		hopper(&Estick),
 		handler(&Estick),
@@ -69,7 +69,7 @@ public:
 		chooser.AddDefault("Middle", &middle);
 		chooser.AddObject("Left", &left);
 		chooser.AddObject("Right", &right);
-		chooser.AddObject("Tracking", &track);
+		chooser.AddObject("Test", &test);
 		SmartDashboard::PutData("AutonModes", &chooser);
 
 		std::thread visionThread(Vision::VisionThread);
@@ -117,16 +117,18 @@ public:
 
 	void Autonomous() override {
 		drive.Safety();
-		while(IsAutonomous() && IsEnabled()){
-			int selected = *(chooser.GetSelected());
+		int selected = *(chooser.GetSelected());
 			if(selected == 0){
-				drive.AutonLeft();
+				auton.SetFieldPosition(StartingPosition::Left);
 			}else if(selected == 1){
-				drive.AutonMiddle();
+				auton.SetFieldPosition(StartingPosition::Middle);
 			}else if(selected == 2){
-				drive.AutonRight();
+				auton.SetFieldPosition(StartingPosition::Right);
 			}else if(selected ==3){
-				drive.TrackTarget();
+				auton.SetFieldPosition(StartingPosition::Test);
+			}
+		while(IsAutonomous() && IsEnabled()){
+				auton.Auton();
 			Wait(0.005);
 
 		}

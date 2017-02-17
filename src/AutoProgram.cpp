@@ -14,9 +14,10 @@ enum StartingPosition{
 	Left = 0,
 	Middle = 1,
 	Right = 2,
+	Test = 3
 };
 
-class Autonomous{
+class AutoProgram{
 
 private:
 
@@ -26,15 +27,26 @@ private:
 	Drive *drive;
 	GearHandler *gear;
 
+	void (*currentprocess)();
+
 public:
-	Autonomous(StartingPosition Start_Position, Drive *maindrive, GearHandler *gearhandler):
-		position(Start_Position),
+	AutoProgram(Drive *maindrive, GearHandler *gearhandler):
+		position(Middle),
 		DisFromWall(0),
 		RotateAngle(0),
 		drive(maindrive),
-		gear(gearhandler)
-	{
+		gear(gearhandler),
+		currentprocess()
+{
+		(*currentprocess) = AutoProgram::AutonForward;
+
+}
+	void AutoInit(){
+		drive->ResetTimer();
+	}
+	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
+		position = field_position;
 		if(position == StartingPosition::Middle){
 			//need to move forward 3ft
 			DisFromWall = 36;
@@ -50,11 +62,29 @@ public:
 		}
 	}
 	void Auton(){
+		if(position == Middle){
+			(*currentprocess)();
+			//drive->DriveStraight(1.5f);
+		}else if(position == Left){
+			AutonLeft();
+		}else if(position == Right){
+			AutonRight();
+		}else if(position == Test){
 
+		}
 	}
-	void DriveForward(){
-		if(drive->DriveToDistance(DisFromWall)){
-			//go to next phase
+	void AutonLeft(){
+		drive->TurnToAngle(90);
+	}
+	void AutonRight(){
+		drive->TurnToAngle(-90);
+	}
+
+	void AutonForward(){
+		//if(drive->DriveToDistance(DisFromWall)){
+		//go to next phase
+		if(drive->DriveStraight(1.5f)){
+
 		}
 	}
 	void Rotate(){
