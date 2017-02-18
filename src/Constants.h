@@ -42,6 +42,10 @@ const int DoorClose_Button_ID = 2;
 const int DriveForward_Button_ID = 3;
 const int DriveBackward_Button_ID = 2;
 
+const int SonarLeft_ID = 0;
+const int SonarRight_ID = 1;
+const int CurrentSensor_ID = 3;
+
 const float Servo_Open = 0.0f;
 const float Servo_Closed = 1.0f;
 
@@ -49,7 +53,7 @@ const float AVERAGE_WEIGHT = 5;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;
-
+const float Motor_Stall_Current = 0.1;
 
 
 

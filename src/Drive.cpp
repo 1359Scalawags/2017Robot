@@ -16,7 +16,7 @@
 			Rstick(Right_Joystick_Port),
 			DriveForward(true),
 			Gyro(),
-			Sonar(0),
+			Sonar(SonarLeft_ID),
 			autoTimer(new Timer()),
 			Drive_straight(0)
 	{
@@ -65,6 +65,7 @@
 
 		SetRobotFront();
 		setDriveSpeed(0.75f);
+		SmartDashboard::PutNumber("Sonar", Sonar.GetAverageValue());
 	}
 
 	bool Drive::DriveStraight(float time){

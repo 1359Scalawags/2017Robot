@@ -16,8 +16,17 @@ enum StartingPosition{
 	Right = 2,
 	Test = 3
 };
+enum AutonState{
+	Driving = 0,
+	Turning = 1,
+	GearPlacing = 2,
+	Backing = 3,
+	Stop = 4
+};
 
 class AutoProgram{
+
+//typedef void (AutoProgram::*Functionptr)();
 
 private:
 
@@ -26,8 +35,9 @@ private:
 	float RotateAngle;
 	Drive *drive;
 	GearHandler *gear;
+	AutonState autostate;
 
-	void (*currentprocess)();
+	//Functionptr currentprocess;
 
 public:
 	AutoProgram(Drive *maindrive, GearHandler *gearhandler):
@@ -36,13 +46,15 @@ public:
 		RotateAngle(0),
 		drive(maindrive),
 		gear(gearhandler),
-		currentprocess()
+		autostate(Driving)
+		//currentprocess()
 {
-		(*currentprocess) = AutoProgram::AutonForward;
+
 
 }
 	void AutoInit(){
 		drive->ResetTimer();
+		//currentprocess = &AutoProgram::AutonForward;
 	}
 	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
@@ -62,16 +74,25 @@ public:
 		}
 	}
 	void Auton(){
-		if(position == Middle){
-			(*currentprocess)();
+
+		if(autostate == Driving) {
+			AutonForward();
+		}else if(autostate == Turning){
+			AutonTurn(RotateAngle);
+		}else if(autostate == GearPlacing){
+			PlaceGear();
+		}
+		/*if(position == Middle){
+			//(this->*currentprocess)();
 			//drive->DriveStraight(1.5f);
+			AutonMiddle();
 		}else if(position == Left){
 			AutonLeft();
 		}else if(position == Right){
 			AutonRight();
 		}else if(position == Test){
 
-		}
+		}*/
 	}
 	void AutonLeft(){
 		drive->TurnToAngle(90);
@@ -80,11 +101,31 @@ public:
 		drive->TurnToAngle(-90);
 	}
 
+	void AutonTurn(float angle){
+		if(drive->TurnToAngle(angle)){
+			autostate = GearPlacing;
+		}
+	}
+	void AutonMiddle(){
+		if(autostate == Driving){
+			AutonForward();
+		}
+	}
+
 	void AutonForward(){
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
 		if(drive->DriveStraight(1.5f)){
+			//currentprocess = &AutoProgram::Rotate;
+			if(position == Middle){
+				autostate = GearPlacing;
+			}else if(position == Left){
+				autostate = Turning;
+			}else if(position == Right){
+				autostate = Turning;
+			}else if(position == Test){
 
+			}
 		}
 	}
 	void Rotate(){

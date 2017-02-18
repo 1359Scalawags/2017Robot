@@ -127,6 +127,7 @@ public:
 			}else if(selected ==3){
 				auton.SetFieldPosition(StartingPosition::Test);
 			}
+			auton.AutoInit();
 		while(IsAutonomous() && IsEnabled()){
 				auton.Auton();
 			Wait(0.005);

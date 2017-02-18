@@ -17,25 +17,26 @@ enum ClimberState{
 class Climber{
 private:
 	Joystick* Estick;
-	DigitalInput ClimbingLimit;
+	AnalogInput ClimbingLimit;
 	Talon ClimbingMotor;
 	ClimberState state;
 public:
 	Climber(Joystick* Ejoy):
 		Estick(Ejoy),
-		ClimbingLimit(Climbing_Limit_ID),
+		ClimbingLimit(CurrentSensor_ID),
 		ClimbingMotor(Climbing_Motor_ID),
 		state(NotClimbing)
 	{
-
+		ClimbingLimit.SetAverageBits(4);
 	}
 
 	void TeleOp(){
 		Climb();
 		setMotors();
+		SmartDashboard::PutNumber("ClimbingMotor", ClimbingLimit.GetAverageValue());
 	}
 	inline void Climb(){
-		if(ClimbingLimit.Get() == Pressed){
+		if(ClimbingLimit.GetAverageValue() >= Motor_Stall_Current){
 			state = ClimberState::Up;
 			SmartDashboard::PutString("ClimberState", "Up");
 		}else if(Estick->GetRawButton(ClimbStart_Button_ID) == true){
