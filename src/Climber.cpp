@@ -11,7 +11,8 @@
 enum ClimberState{
 	NotClimbing = 0,
 	Climbing = 1,
-	Up = 2
+	Up = 2,
+	Nudge = 3
 };
 
 class Climber{
@@ -36,7 +37,9 @@ public:
 		SmartDashboard::PutNumber("ClimbingMotor", ClimbingLimit.GetAverageValue());
 	}
 	inline void Climb(){
-		if(ClimbingLimit.GetAverageValue() >= Motor_Stall_Current){
+		if(Estick->GetRawButton(ClimbNudge_Button_ID) == true){
+			state = ClimberState::Nudge;
+		}else if(ClimbingLimit.GetAverageValue() >= Motor_Stall_Current){
 			state = ClimberState::Up;
 			SmartDashboard::PutString("ClimberState", "Up");
 		}else if(Estick->GetRawButton(ClimbStart_Button_ID) == true){
@@ -49,7 +52,10 @@ public:
 	}
 
 	inline void setMotors(){
-		if(state == ClimberState::Climbing){
+		if(state == ClimberState::Nudge){
+			ClimbingMotor.Set(Nudge_Motor_Speed);
+			state = ClimberState::Up;
+		}else if(state == ClimberState::Climbing){
 			ClimbingMotor.Set(Climbing_Motor_Speed);
 		}else if(state == ClimberState::Up){
 			ClimbingMotor.Set(0);

@@ -8,15 +8,16 @@
 #ifndef SRC_CONSTANTS_H_
 #define SRC_CONSTANTS_H_
 
-const int LeftA_Motor_ID = 0;
-const int LeftB_Motor_ID = 1;
+const char LeftA_Motor_ID = 0;
+const char LeftB_Motor_ID = 1;
 const int RightA_Motor_ID = 2;
 const int RightB_Motor_ID = 3;
 
-const int Platform_Motor_ID = 0;
+const int Platform_Motor_ID = 4;
 const int Climbing_Motor_ID = 5;
 
 const float Climbing_Motor_Speed = -0.8f;
+const float Nudge_Motor_Speed = -0.4f;
 
 const int Door_Servo_ID = 9;
 
@@ -39,6 +40,7 @@ const int Climbing_Limit_ID = 0;
 const int ClimbStart_Button_ID = 1;
 const int DoorOpen_Button_ID = 3;
 const int DoorClose_Button_ID = 2;
+const int ClimbNudge_Button_ID = 6;
 const int DriveForward_Button_ID = 3;
 const int DriveBackward_Button_ID = 2;
 
@@ -53,7 +55,7 @@ const float AVERAGE_WEIGHT = 5;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;
-const float Motor_Stall_Current = 0.1;
+const float Motor_Stall_Current = 5000.0f;
 
 
 

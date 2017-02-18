@@ -68,7 +68,7 @@
 		SmartDashboard::PutNumber("Sonar", Sonar.GetAverageValue());
 	}
 
-	bool Drive::DriveStraight(float time){
+	bool Drive::DriveForwardByTime(float time){
 		float angle = Gyro.GetAngle();
 			if(autoTimer->Get() < time){
 				ArcadeDrive(.5f, angle * .5f);
@@ -78,6 +78,17 @@
 				return true;
 			}
 	}
+	bool Drive::DriveBackwardByTime(float time){
+			//float angle = Gyro.GetAngle();
+			float angle = 0.0f;
+				if(autoTimer->Get() < time){
+					ArcadeDrive(-.5f, -angle * .5f);
+					return false;
+				}else{
+					ArcadeDrive(-0.0f, -angle * .5f);
+					return true;
+				}
+		}
 
 	bool Drive::TurnToAngle(float targetAngle){
 		float angle = Gyro.GetAngle() - targetAngle;

@@ -17,11 +17,17 @@ enum StartingPosition{
 	Test = 3
 };
 enum AutonState{
-	Driving = 0,
-	Turning = 1,
-	GearPlacing = 2,
-	Backing = 3,
-	Stop = 4
+	Driving,
+	TurningToPeg,
+	TargetPeg,
+	GearPlacing,
+	DropGear,
+	Backing,
+	TurnToClear,
+	DriveToClear,
+	TurnToLine,
+	DriveToLine,
+	Stop
 };
 
 class AutoProgram{
@@ -77,10 +83,20 @@ public:
 
 		if(autostate == Driving) {
 			AutonForward();
-		}else if(autostate == Turning){
+		}else if(autostate == TurningToPeg){
 			AutonTurn(RotateAngle);
+		}else if(autostate == TargetPeg){
+			TrackPeg();
 		}else if(autostate == GearPlacing){
 			PlaceGear();
+		}else if(autostate == DropGear){
+			DropingGear();
+		}else if(autostate == Backing){
+			AutonBackward();
+		}else if(autostate == TurnToClear){
+
+		}else{
+			drive->ArcadeDrive(0.0f, 0.0f);
 		}
 		/*if(position == Middle){
 			//(this->*currentprocess)();
@@ -103,7 +119,7 @@ public:
 
 	void AutonTurn(float angle){
 		if(drive->TurnToAngle(angle)){
-			autostate = GearPlacing;
+			autostate = TargetPeg;
 		}
 	}
 	void AutonMiddle(){
@@ -115,17 +131,31 @@ public:
 	void AutonForward(){
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
-		if(drive->DriveStraight(1.5f)){
+		if(drive->DriveForwardByTime(1.5f)){
 			//currentprocess = &AutoProgram::Rotate;
 			if(position == Middle){
-				autostate = GearPlacing;
-			}else if(position == Left){
-				autostate = Turning;
-			}else if(position == Right){
-				autostate = Turning;
+				autostate = TargetPeg;
+			}else if(position == Left || position == Right){
+				autostate = TurningToPeg;
 			}else if(position == Test){
 
 			}
+		}
+	}
+	void AutonBackward(){
+		//if(drive->DriveToDistance(DisFromWall)){
+		//go to next phase
+		if(drive->DriveBackwardByTime(1.5f)){
+			//currentprocess = &AutoProgram::Rotate;
+			if(position == Middle){
+
+			}else if(position == Left || position == Right){
+				autostate = AutonState::Stop;
+			}else if(position == Test){
+
+			}
+		}else{
+
 		}
 	}
 	void Rotate(){
@@ -138,9 +168,13 @@ public:
 		float area = Vision::getLargestArea();
 		SmartDashboard::PutNumber("CenterX", centerX);
 		SmartDashboard::PutNumber("Area", area);
+		autostate = AutonState::GearPlacing;
 	}
 	void PlaceGear(){
-
+		autostate = AutonState::DropGear;
+	}
+	void DropingGear(){
+		autostate = AutonState::Backing;
 	}
 };
 

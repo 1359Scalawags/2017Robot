@@ -22,7 +22,7 @@ private:
 	Joystick* Estick;
 	DigitalInput PlatformUpLimit;
 	DigitalInput PlatformDownLimit;
-	Relay PlatformMotor;
+	Talon PlatformMotor;
 public:
 	FuelHopper(Joystick* Ejoy):
 		Estick(Ejoy),
@@ -41,12 +41,15 @@ public:
 	inline void MovePlatform(){
 		if(Estick->GetY() < -0.1 && PlatformDownLimit.Get() == Not_Pressed){
 			//PlatformMotor.Set(Estick->GetY() * SpeedMultiplier);
-			PlatformMotor.Set(Relay::kReverse);
+			//PlatformMotor.Set(Relay::kReverse);
+			PlatformMotor.Set(Estick->GetY());
 		}else if((Estick->GetY() > 0.1 && PlatformUpLimit.Get() == Not_Pressed)){
-			PlatformMotor.Set(Relay::kForward);
+			//PlatformMotor.Set(Relay::kForward);
+			PlatformMotor.Set(Estick->GetY());
 		}else{
 			//PlatformMotor.Set(0);
-			PlatformMotor.Set(Relay::kOff);
+			//PlatformMotor.Set(Relay::kOff);
+			PlatformMotor.Set(0);
 		}
 	}
 

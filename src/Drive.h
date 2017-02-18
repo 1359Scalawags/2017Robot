@@ -61,7 +61,8 @@ public:
 	void setDriveSpeed(float multiplier);
 	float GetTargetCenterX(std::vector<cv::Point> target_x);
 	void TrackTarget();
-	bool DriveStraight(float time);
+	bool DriveForwardByTime(float time);
+	bool DriveBackwardByTime(float time);
 };
 
 
