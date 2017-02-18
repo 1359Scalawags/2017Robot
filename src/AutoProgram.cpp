@@ -29,6 +29,10 @@ enum AutonState{
 	DriveToLine,
 	Stop
 };
+enum AutonMiddleDirection{
+	MidLeft,
+	MidRight
+};
 
 class AutoProgram{
 
@@ -38,10 +42,13 @@ private:
 
 	StartingPosition position;
 	float DisFromWall;
-	float RotateAngle;
+	float RotateAnglePeg;
+	float RotateAngleLine;
+	float RotateAngleClear;
 	Drive *drive;
 	GearHandler *gear;
 	AutonState autostate;
+	AutonMiddleDirection automiddir;
 
 	//Functionptr currentprocess;
 
@@ -49,10 +56,13 @@ public:
 	AutoProgram(Drive *maindrive, GearHandler *gearhandler):
 		position(Middle),
 		DisFromWall(0),
-		RotateAngle(0),
+		RotateAnglePeg(0),
+		RotateAngleLine(0),
+		RotateAngleClear(0),
 		drive(maindrive),
 		gear(gearhandler),
-		autostate(Driving)
+		autostate(Driving),
+		automiddir(MidRight)
 		//currentprocess()
 {
 
@@ -68,15 +78,20 @@ public:
 		if(position == StartingPosition::Middle){
 			//need to move forward 3ft
 			DisFromWall = 36;
-			RotateAngle = 0;
+			RotateAnglePeg = 0;
+
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
-			RotateAngle = 120;
+			RotateAnglePeg = 60;
+			RotateAngleClear = 0;
+			RotateAngleLine = -60;
 		}else if(position == StartingPosition::Right){
 			//need to move forward 16ft
 			DisFromWall = 192;
-			RotateAngle = -120;
+			RotateAnglePeg = -60;
+			RotateAngleClear = 0;
+			RotateAngleLine = -60;
 		}
 	}
 	void Auton(){
@@ -84,7 +99,7 @@ public:
 		if(autostate == Driving) {
 			AutonForward();
 		}else if(autostate == TurningToPeg){
-			AutonTurn(RotateAngle);
+			AutonTurnToPeg(RotateAnglePeg);
 		}else if(autostate == TargetPeg){
 			TrackPeg();
 		}else if(autostate == GearPlacing){
@@ -94,7 +109,13 @@ public:
 		}else if(autostate == Backing){
 			AutonBackward();
 		}else if(autostate == TurnToClear){
-
+			TurnClear(90);
+		}else if(autostate == DriveToClear){
+			DriveClear();
+		}else if(autostate == TurnToLine){
+			TurnLine(90);
+		}else if(autostate == DriveToLine){
+			DriveLine();
 		}else{
 			drive->ArcadeDrive(0.0f, 0.0f);
 		}
@@ -117,7 +138,7 @@ public:
 		drive->TurnToAngle(-90);
 	}
 
-	void AutonTurn(float angle){
+	void AutonTurnToPeg(float angle){
 		if(drive->TurnToAngle(angle)){
 			autostate = TargetPeg;
 		}
@@ -145,22 +166,11 @@ public:
 	void AutonBackward(){
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
-		if(drive->DriveBackwardByTime(1.5f)){
+		if(drive->DriveBackwardByTime(1.0f)){
 			//currentprocess = &AutoProgram::Rotate;
-			if(position == Middle){
-
-			}else if(position == Left || position == Right){
-				autostate = AutonState::Stop;
-			}else if(position == Test){
-
-			}
+			autostate = AutonState::TurnToClear;
 		}else{
 
-		}
-	}
-	void Rotate(){
-		if(drive->TurnToAngle(RotateAngle)){
-			//go to next phase
 		}
 	}
 	void TrackPeg(){
@@ -175,6 +185,26 @@ public:
 	}
 	void DropingGear(){
 		autostate = AutonState::Backing;
+	}
+	void TurnClear(float angle){
+		if(drive->TurnToAngle(angle)){
+			autostate = AutonState::DriveToClear;
+		}
+	}
+	void DriveClear(){
+		if(drive->DriveForwardByTime(1.5f)){
+			autostate = AutonState::TurnToLine;
+		}
+	}
+	void TurnLine(float angle){
+		if(drive->TurnToAngle(angle)){
+			autostate = AutonState::DriveToLine;
+		}
+	}
+	void DriveLine(){
+		if(drive->DriveForwardByTime(1.5f)){
+			autostate = AutonState::Stop;
+		}
 	}
 };
 

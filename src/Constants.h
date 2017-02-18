@@ -16,7 +16,7 @@ const int RightB_Motor_ID = 3;
 const int Platform_Motor_ID = 4;
 const int Climbing_Motor_ID = 5;
 
-const float Climbing_Motor_Speed = -0.8f;
+const float Climbing_Motor_Speed = -1.0f;
 const float Nudge_Motor_Speed = -0.4f;
 
 const int Door_Servo_ID = 9;
@@ -55,7 +55,7 @@ const float AVERAGE_WEIGHT = 5;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;
-const float Motor_Stall_Current = 5000.0f;
+const float Motor_Stall_Current = 99999.9f;
 
 
 

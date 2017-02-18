@@ -39,9 +39,9 @@ public:
 	inline void Climb(){
 		if(Estick->GetRawButton(ClimbNudge_Button_ID) == true){
 			state = ClimberState::Nudge;
-		}else if(ClimbingLimit.GetAverageValue() >= Motor_Stall_Current){
+		/*}else if(ClimbingLimit.GetAverageValue() >= Motor_Stall_Current){
 			state = ClimberState::Up;
-			SmartDashboard::PutString("ClimberState", "Up");
+			SmartDashboard::PutString("ClimberState", "Up");*/
 		}else if(Estick->GetRawButton(ClimbStart_Button_ID) == true){
 			state = ClimberState::Climbing;
 			SmartDashboard::PutString("ClimberState", "Climbing");

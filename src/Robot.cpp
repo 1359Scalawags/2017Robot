@@ -30,6 +30,10 @@ class Robot: public frc::SampleRobot {
 	int right = 2;
 	int test = 3;
 
+	frc::SendableChooser<int*> MiddleDirChooser;
+	int midleft = 0;
+	int midright = 1;
+
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
 
@@ -117,14 +121,14 @@ public:
 
 	void Autonomous() override {
 		drive.Safety();
-		int selected = *(chooser.GetSelected());
-			if(selected == 0){
+		int selectFieldPos = *(chooser.GetSelected());
+			if(selectFieldPos == 0){
 				auton.SetFieldPosition(StartingPosition::Left);
-			}else if(selected == 1){
+			}else if(selectFieldPos == 1){
 				auton.SetFieldPosition(StartingPosition::Middle);
-			}else if(selected == 2){
+			}else if(selectFieldPos == 2){
 				auton.SetFieldPosition(StartingPosition::Right);
-			}else if(selected ==3){
+			}else if(selectFieldPos ==3){
 				auton.SetFieldPosition(StartingPosition::Test);
 			}
 			auton.AutoInit();

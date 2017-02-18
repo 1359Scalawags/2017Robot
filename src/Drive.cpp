@@ -64,7 +64,7 @@
 	void Drive::TeleOp(){
 
 		SetRobotFront();
-		setDriveSpeed(0.75f);
+		setDriveSpeed(1.5f);
 		SmartDashboard::PutNumber("Sonar", Sonar.GetAverageValue());
 	}
 
