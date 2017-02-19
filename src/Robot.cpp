@@ -130,6 +130,8 @@ public:
 				auton.SetFieldPosition(StartingPosition::Right);
 			}else if(selectFieldPos ==3){
 				auton.SetFieldPosition(StartingPosition::Test);
+			}else{
+
 			}
 			auton.AutoInit();
 		while(IsAutonomous() && IsEnabled()){
@@ -184,7 +186,23 @@ public:
 
 
 	void Test() override {
-
+		drive.GyroReset();
+		float targetAngle = 0.0f;
+		while(IsTest() && IsEnabled()){
+			//float angle = Gyro.GetAngle() - targetAngle;
+			float angle = drive.PullGyroAngle() - targetAngle;
+			if(angle > 10.0f * ROTATE_TOLERANCE){
+				drive.ArcadeDrive(0.0f, -.75f);
+			}else if(angle > ROTATE_TOLERANCE){
+				drive.ArcadeDrive(0.0f, -0.3f);
+			}else if(angle < -10.0f * ROTATE_TOLERANCE){
+				drive.ArcadeDrive(0.0f, 0.75);
+			}else if(angle < -ROTATE_TOLERANCE){
+				drive.ArcadeDrive(0.0f, 0.3f);
+			}else{
+				drive.ArcadeDrive(0.0f, 0.0f);
+			}
+		}
 	}
 };
 

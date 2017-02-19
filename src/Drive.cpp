@@ -93,13 +93,13 @@
 	bool Drive::TurnToAngle(float targetAngle){
 		float angle = Gyro.GetAngle() - targetAngle;
 				if(angle > 10.0f * ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, .75f);
+					ArcadeDrive(0.0f, -.75f);
 				}else if(angle > ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, 0.3f);
-				}else if(angle < -10.0f * ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, -0.75);
-				}else if(angle < -ROTATE_TOLERANCE){
 					ArcadeDrive(0.0f, -0.3f);
+				}else if(angle < -10.0f * ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, 0.75);
+				}else if(angle < -ROTATE_TOLERANCE){
+					ArcadeDrive(0.0f, 0.3f);
 				}else{
 					mainDrive.ArcadeDrive(0.0f, 0.0f);
 					return true;
@@ -178,6 +178,10 @@
 
 	void Drive::TrackTarget(){
 
+	}
+
+	float Drive::PullGyroAngle(){
+		return Gyro.GetAngle();
 	}
 
 	/*inline float TargetTrack(){

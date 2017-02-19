@@ -140,7 +140,8 @@ public:
 
 	void AutonTurnToPeg(float angle){
 		if(drive->TurnToAngle(angle)){
-			autostate = TargetPeg;
+			//autostate = AutonState::TargetPeg;
+			autostate = AutonState::Stop;
 		}
 	}
 	void AutonMiddle(){
@@ -155,7 +156,7 @@ public:
 		if(drive->DriveForwardByTime(1.5f)){
 			//currentprocess = &AutoProgram::Rotate;
 			if(position == Middle){
-				autostate = TargetPeg;
+				autostate = AutonState::TargetPeg;
 			}else if(position == Left || position == Right){
 				autostate = TurningToPeg;
 			}else if(position == Test){

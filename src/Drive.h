@@ -63,6 +63,7 @@ public:
 	void TrackTarget();
 	bool DriveForwardByTime(float time);
 	bool DriveBackwardByTime(float time);
+	float PullGyroAngle();
 };
 
 
