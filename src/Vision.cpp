@@ -13,6 +13,7 @@
 static std::vector<std::vector<cv::Point>>* ContourOutput;
 	static float average_centerx = 0.0f;
 	static float largest_area = 0.0f;
+	static int target_count = 0;
 	Vision::Vision(){
 
 	}
@@ -37,20 +38,28 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 		}
 	void Vision::VisionTargets(){
 		float sum_centerx = 0.0f;
-		int count = 0;
+		target_count = 0;
 		for(std::vector<cv::Point> con : *ContourOutput){
 			largest_area = std::max(largest_area, (float)cv::contourArea(con));
 			cv::Rect rect = cv::boundingRect(con);
 			average_centerx += sum_centerx + rect.x + rect.width /2;
-			count++;
+			target_count++;
 		}
-		average_centerx = sum_centerx / count;
+		average_centerx = sum_centerx / target_count;
 	}
 	float Vision::getLargestArea(){
 		return largest_area;
 	}
 	float Vision::getAverageCenterX(){
 		return average_centerx;
+	}
+	int Vision::GetTargetNumber(){
+		return target_count;
+	}
+	void Vision::UpdateSmartDashboard(){
+		SmartDashboard::PutNumber("Largest Target", largest_area);
+		SmartDashboard::PutNumber("Average Center Of Targets", average_centerx);
+		SmartDashboard::PutNumber("Number Of Targets", target_count);
 	}
 
 /*SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());

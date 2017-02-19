@@ -32,6 +32,8 @@ class Vision{
 	static void VisionTargets();
 	static float getLargestArea();
 	static float getAverageCenterX();
+	static int GetTargetNumber();
+	static void UpdateSmartDashboard();
 };
 
 #endif /* SRC_VISION_H_ */

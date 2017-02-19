@@ -34,6 +34,12 @@ class Robot: public frc::SampleRobot {
 	int midleft = 0;
 	int midright = 1;
 
+	frc::SendableChooser<int*> AngleChooser;
+	int test1 = 0;
+	int test2 = 1;
+	int test3 = 2;
+	int test4 = 3;
+
 	//bool DriveForward;
 	//ADXRS450_Gyro Gyro;
 
@@ -75,6 +81,16 @@ public:
 		chooser.AddObject("Right", &right);
 		chooser.AddObject("Test", &test);
 		SmartDashboard::PutData("AutonModes", &chooser);
+
+		MiddleDirChooser.AddDefault("Middle Left", &midleft);
+		MiddleDirChooser.AddObject("Middle Right", &midright);
+		SmartDashboard::PutData("Middle Direction", &MiddleDirChooser);
+
+		AngleChooser.AddDefault("Test1", &test1);
+		AngleChooser.AddObject("Test2", &test2);
+		AngleChooser.AddObject("Test3", &test3);
+		AngleChooser.AddObject("Test4", &test4);
+		SmartDashboard::PutData("Angle Tester", &AngleChooser);
 
 		std::thread visionThread(Vision::VisionThread);
 		visionThread.detach();
@@ -188,9 +204,20 @@ public:
 	void Test() override {
 		drive.GyroReset();
 		float targetAngle = 0.0f;
+		int selectTestAngle = *(AngleChooser.GetSelected());
+					if(selectTestAngle == 0){
+						targetAngle = 30.0f;
+					}else if(selectTestAngle == 1){
+						targetAngle = -90.0f;
+					}else if(selectTestAngle == 2){
+						targetAngle = 150.0f;
+					}else if(selectTestAngle ==3){
+						targetAngle = 190.0f;
+					}
+
 		while(IsTest() && IsEnabled()){
 			//float angle = Gyro.GetAngle() - targetAngle;
-			float angle = drive.PullGyroAngle() - targetAngle;
+			float angle = NormalizeAngle(drive.PullGyroAngle() - targetAngle);
 			if(angle > 10.0f * ROTATE_TOLERANCE){
 				drive.ArcadeDrive(0.0f, -.75f);
 			}else if(angle > ROTATE_TOLERANCE){
@@ -202,7 +229,17 @@ public:
 			}else{
 				drive.ArcadeDrive(0.0f, 0.0f);
 			}
+			Vision::UpdateSmartDashboard();
 		}
+	}
+	float NormalizeAngle(float angle){
+		while(angle > 180){
+			angle = angle - 360;
+		}
+		while(angle < -180){
+			angle = angle + 360;
+		}
+		return angle;
 	}
 };
 
