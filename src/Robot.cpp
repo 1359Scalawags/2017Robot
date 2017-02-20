@@ -10,6 +10,7 @@
 #include <Climber.cpp>
 #include <GripAreaPipeline.h>
 #include <Vision.h>
+#include <algorithm>
 
 
 
@@ -221,7 +222,7 @@ public:
 		while(IsTest() && IsEnabled()){
 			//float angle = Gyro.GetAngle() - targetAngle;
 			float angle = NormalizeAngle(drive.PullGyroAngle() - targetAngle);
-			drive.ArcadeDrive(0.0f, 0.025 * -angle);
+			drive.ArcadeDrive(0.0f, std::max(-0.5, std::min(0.5, 0.025 * -angle)));
 			/*if(angle > 10.0f * ROTATE_TOLERANCE){
 				drive.ArcadeDrive(0.0f, -.5f);
 			}else if(angle > ROTATE_TOLERANCE){

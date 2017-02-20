@@ -142,15 +142,19 @@
 	void Drive::setDriveSpeed(float multiplier){
 		float LeftStickValue = multiplier * (-Lstick.GetY());
 		float RightStickValue = multiplier * (-Rstick.GetY());
-		if(LeftStickValue < 0.5){
+		if(abs(LeftStickValue) < 0.5){
 			LeftStickValue = 0.5 * LeftStickValue;
 		}else if(LeftStickValue >= 0.5){
 			LeftStickValue = 1.5 * LeftStickValue - .5;
+		}else{
+			LeftStickValue = 1.5 * LeftStickValue + .5;
 		}
-		if(RightStickValue < 0.5){
+		if(abs(RightStickValue) < 0.5){
 			RightStickValue = 0.5 * RightStickValue;
 		}else if(RightStickValue >= 0.5){
 			RightStickValue = 1.5 * RightStickValue - .5;
+		}else{
+			RightStickValue = 1.5 * RightStickValue + .5;
 		}
 
 		/*if(abs(LeftStickValue - RightStickValue) < STRAIT_TOLERANCE){
