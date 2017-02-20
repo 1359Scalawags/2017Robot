@@ -25,15 +25,16 @@
 
 class Vision{
 	private:
-
+	static float getAverageCenterX();
+	static void VisionTargets();
+	static float getLargestArea();
 	public:
 	Vision();
 	static void VisionThread();
-	static void VisionTargets();
-	static float getLargestArea();
-	static float getAverageCenterX();
 	static int GetTargetNumber();
 	static void UpdateSmartDashboard();
+	static float GetAproxamatAngle(int target_center_x, int target_width);
+	static float getAproxAngleToTarget();
 };
 
 #endif /* SRC_VISION_H_ */

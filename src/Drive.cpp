@@ -91,20 +91,13 @@
 		}
 
 	bool Drive::TurnToAngle(float targetAngle){
-		float angle = Gyro.GetAngle() - targetAngle;
-				if(angle > 10.0f * ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, -.75f);
-				}else if(angle > ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, -0.3f);
-				}else if(angle < -10.0f * ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, 0.75);
-				}else if(angle < -ROTATE_TOLERANCE){
-					ArcadeDrive(0.0f, 0.3f);
-				}else{
-					mainDrive.ArcadeDrive(0.0f, 0.0f);
-					return true;
-				}
-				return false;
+		float angle = NormalizeAngle(PullGyroAngle() - targetAngle);
+		ArcadeDrive(0.0f, std::max(-0.5, std::min(0.5, 0.025 * -angle)));
+		if(abs(angle) < ROTATE_TOLERANCE && abs(Gyro.GetRate()) < 5){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	void Drive::TankDrive(float target_left, float target_right){
@@ -196,6 +189,15 @@
 
 	float Drive::PullGyroAngle(){
 		return Gyro.GetAngle();
+	}
+	float Drive::NormalizeAngle(float angle){
+		while(angle > 180){
+			angle = angle - 360;
+		}
+		while(angle < -180){
+			angle = angle + 360;
+		}
+		return angle;
 	}
 
 	/*inline float TargetTrack(){

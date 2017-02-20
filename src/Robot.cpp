@@ -220,31 +220,10 @@ public:
 					}
 
 		while(IsTest() && IsEnabled()){
-			//float angle = Gyro.GetAngle() - targetAngle;
-			float angle = NormalizeAngle(drive.PullGyroAngle() - targetAngle);
-			drive.ArcadeDrive(0.0f, std::max(-0.5, std::min(0.5, 0.025 * -angle)));
-			/*if(angle > 10.0f * ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, -.5f);
-			}else if(angle > ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, -0.25f);
-			}else if(angle < -10.0f * ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, 0.5);
-			}else if(angle < -ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, 0.25f);
-			}else{
-				drive.ArcadeDrive(0.0f, 0.0f);
-			}*/
+			drive.TurnToAngle(targetAngle);
 			Vision::UpdateSmartDashboard();
+			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 		}
-	}
-	float NormalizeAngle(float angle){
-		while(angle > 180){
-			angle = angle - 360;
-		}
-		while(angle < -180){
-			angle = angle + 360;
-		}
-		return angle;
 	}
 };
 

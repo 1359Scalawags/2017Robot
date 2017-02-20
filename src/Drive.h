@@ -41,6 +41,8 @@ private:
 
 	float Drive_straight = 0;
 
+	void setDriveSpeed(float multiplier);
+
 
 public:
 
@@ -58,12 +60,10 @@ public:
 	bool TurnToAngle(float targetAngle);
 	void TankDrive(float target_left, float target_right);
 	void ArcadeDrive(float target_speed, float rotate_speed);
-	void setDriveSpeed(float multiplier);
-	float GetTargetCenterX(std::vector<cv::Point> target_x);
-	void TrackTarget();
 	bool DriveForwardByTime(float time);
 	bool DriveBackwardByTime(float time);
 	float PullGyroAngle();
+	float NormalizeAngle(float angle);
 };
 
 
