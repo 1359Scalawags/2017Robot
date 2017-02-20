@@ -27,9 +27,14 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 			        cv::Mat output;
 			        while(true) {
 			            cvSink.GrabFrame(source);
-			            gap.Process(source);
+			            if(source.empty()){
+			            	continue;
+			            }else{
+			            	gap.Process(source);
 			            ContourOutput = gap.GetFilterContoursOutput();
 			            VisionTargets();
+			            }
+
 			            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
 			            //outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
 			            Wait(0.03);

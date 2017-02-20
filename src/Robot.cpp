@@ -76,25 +76,10 @@ public:
 		/*CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
 		CameraServer::GetInstance()->StartAutomaticCapture();*/
 
-		chooser.AddDefault("Middle", &middle);
-		chooser.AddObject("Left", &left);
-		chooser.AddObject("Right", &right);
-		chooser.AddObject("Test", &test);
-		SmartDashboard::PutData("AutonModes", &chooser);
-
-		MiddleDirChooser.AddDefault("Middle Left", &midleft);
-		MiddleDirChooser.AddObject("Middle Right", &midright);
-		SmartDashboard::PutData("Middle Direction", &MiddleDirChooser);
-
-		AngleChooser.AddDefault("Test1", &test1);
-		AngleChooser.AddObject("Test2", &test2);
-		AngleChooser.AddObject("Test3", &test3);
-		AngleChooser.AddObject("Test4", &test4);
-		SmartDashboard::PutData("Angle Tester", &AngleChooser);
-
 		std::thread visionThread(Vision::VisionThread);
 		visionThread.detach();
 
+		RobotChooser();
 		//drive.DriveInit();
 
 
@@ -112,7 +97,23 @@ public:
 
 	}
 
+	void RobotChooser(){
+		chooser.AddDefault("Middle", &middle);
+		chooser.AddObject("Left", &left);
+		chooser.AddObject("Right", &right);
+		chooser.AddObject("Test", &test);
+		SmartDashboard::PutData("AutonModes", &chooser);
 
+		MiddleDirChooser.AddDefault("Middle Left", &midleft);
+		MiddleDirChooser.AddObject("Middle Right", &midright);
+		SmartDashboard::PutData("Middle Direction", &MiddleDirChooser);
+
+		AngleChooser.AddDefault("Test1", &test1);
+		AngleChooser.AddObject("Test2", &test2);
+		AngleChooser.AddObject("Test3", &test3);
+		AngleChooser.AddObject("Test4", &test4);
+		SmartDashboard::PutData("Angle Tester", &AngleChooser);
+	}
 
 	/*void RobotInit() {
 
@@ -137,6 +138,7 @@ public:
 
 	void Autonomous() override {
 		drive.Safety();
+		//RobotChooser();
 		int selectFieldPos = *(chooser.GetSelected());
 			if(selectFieldPos == 0){
 				auton.SetFieldPosition(StartingPosition::Left);
@@ -164,7 +166,7 @@ public:
 	void OperatorControl() override {
 //		mainDrive.SetSafetyEnabled(true);
 		drive.Safety();
-
+		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();
 			//double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
@@ -203,6 +205,7 @@ public:
 
 	void Test() override {
 		drive.GyroReset();
+		//RobotChooser();
 		float targetAngle = 0.0f;
 		int selectTestAngle = *(AngleChooser.GetSelected());
 					if(selectTestAngle == 0){
@@ -218,17 +221,18 @@ public:
 		while(IsTest() && IsEnabled()){
 			//float angle = Gyro.GetAngle() - targetAngle;
 			float angle = NormalizeAngle(drive.PullGyroAngle() - targetAngle);
-			if(angle > 10.0f * ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, -.75f);
+			drive.ArcadeDrive(0.0f, 0.025 * -angle);
+			/*if(angle > 10.0f * ROTATE_TOLERANCE){
+				drive.ArcadeDrive(0.0f, -.5f);
 			}else if(angle > ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, -0.3f);
+				drive.ArcadeDrive(0.0f, -0.25f);
 			}else if(angle < -10.0f * ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, 0.75);
+				drive.ArcadeDrive(0.0f, 0.5);
 			}else if(angle < -ROTATE_TOLERANCE){
-				drive.ArcadeDrive(0.0f, 0.3f);
+				drive.ArcadeDrive(0.0f, 0.25f);
 			}else{
 				drive.ArcadeDrive(0.0f, 0.0f);
-			}
+			}*/
 			Vision::UpdateSmartDashboard();
 		}
 	}
