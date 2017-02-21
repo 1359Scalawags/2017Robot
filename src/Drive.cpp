@@ -140,33 +140,50 @@
 		float LeftStickValue = multiplier * (-Lstick.GetY());
 		float RightStickValue = multiplier * (-Rstick.GetY());
 
+		//LeftStickValue = pow(LeftStickValue, 3);
+		//RightStickValue = pow(RightStickValue, 3);
 
-/*		LeftStickValue = pow(LeftStickValue, 3);
-		RightStickValue = pow(RightStickValue, 3);
+		if(LeftStickValue >= 0) {
+			LeftStickValue = pow(LeftStickValue, 2);
+		} else {
+			LeftStickValue = -pow(LeftStickValue, 2);
+		}
+		if(RightStickValue >= 0) {
+			RightStickValue = pow(RightStickValue, 2);
+		} else {
+			RightStickValue = -pow(RightStickValue, 2);
+		}
 
-		float JoyStickDifference = RightStickValue - RightStickValue;
-		float effect = -0.25 * pow(JoyStickDifference, 2) + 1;
-		float adjust = ((LeftStickValue + RightStickValue) / 2.0f) * Gyro.GetRate() * effect /100.0f;
-		adjust = std::max(-0.1f, std::min(0.1f, adjust));
-
-		RightStickValue = RightStickValue - adjust;
-		LeftStickValue = LeftStickValue + adjust;
+//		float JoyStickDifference = RightStickValue - RightStickValue;
+//		float effect = -0.25 * pow(JoyStickDifference, 2) + 1;
+//		float adjust = ((LeftStickValue + RightStickValue) / 2.0f) * Gyro.GetRate() * effect /100.0f;
+//		adjust = std::max(-0.1f, std::min(0.1f, adjust));
+//
+//		RightStickValue = RightStickValue - adjust;
+//		LeftStickValue = LeftStickValue + adjust;
 
 		if(DriveForward == true){
 					TankDrive(LeftStickValue, RightStickValue);
 				}else{
 					TankDrive(-LeftStickValue, -RightStickValue);
-				}*/
-		LeftStickValue = pow(LeftStickValue, 3);
-		RightStickValue = pow(RightStickValue, 3);
-		float JoyStickDifference = RightStickValue - RightStickValue;
-		float JoyStickAverage = (LeftStickValue + RightStickValue) / 2.0f;
-
-		if(DriveForward == true){
-					ArcadeDrive(JoyStickAverage, JoyStickDifference / 100);
-				}else{
-					ArcadeDrive(-JoyStickAverage, -JoyStickDifference / 100);
 				}
+		//LeftStickValue = pow(LeftStickValue, 3);
+		//RightStickValue = pow(RightStickValue, 3);
+//		float JoyStickDifference = LeftStickValue - RightStickValue;
+//		float JoyStickAverage = (LeftStickValue + RightStickValue) / 2.0f;
+//
+//		if(abs(LeftStickValue) < 0.1 && abs(RightStickValue) < 0.1){
+//			ArcadeDrive(0.0f, 0.0f);
+//		}else{
+//			float angle = Gyro.GetRate() * 0.1f;
+//			if(DriveForward == true){
+//				ArcadeDrive(JoyStickAverage, JoyStickDifference / 5 - angle);
+//			}else{
+//				ArcadeDrive(-JoyStickAverage, JoyStickDifference / 5 + angle);
+//			}
+//		}
+
+
 	}
 
 	/*float getJoystickTransform(float input){

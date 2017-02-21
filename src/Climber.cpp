@@ -44,11 +44,11 @@ public:
 			state = ClimberState::Unwind;
 		}else if(Estick->GetRawButton(ClimbNudge_Button_ID) == true){
 			state = ClimberState::Nudge;
-		}else if(abs(ClimbingLimit.GetAverageValue() - Motor_Offset_Value) >= 150){
+/*		}else if(abs(ClimbingLimit.GetAverageValue() - Motor_Offset_Value) >= 150){
 			if(ClimbCycles > 10){
 				state = ClimberState::Up;
 				SmartDashboard::PutString("ClimberState", "Up");
-			}
+			}*/
 		}else if(state != ClimberState::Up){
 			if(Estick->GetRawButton(ClimbStart_Button_ID) == true){
 				ClimbCycles++;
