@@ -55,7 +55,7 @@ const char CurrentSensor_ID = 3;
 const float Servo_Open = 0.0f;
 const float Servo_Closed = 1.0f;
 
-const char AVERAGE_WEIGHT = 5;
+const char AVERAGE_WEIGHT = 20;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;

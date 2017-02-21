@@ -177,6 +177,7 @@ public:
 			hopper.TeleOp();
 			handler.TeleOp();
 			climber.TeleOp();
+			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 			//int large_angle = (int)(angle * 1000);
 			//angle = (large_angle % 360000) / 1000.0f;
 			//SmartDashboard::PutNumber("GYRO", angle);

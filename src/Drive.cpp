@@ -132,60 +132,46 @@
 		mainDrive.ArcadeDrive(last_arcade_speed, last_rotate_speed);
 	}
 
+	void Drive::DriveAssist(){
+
+	}
+
 	void Drive::setDriveSpeed(float multiplier){
 		float LeftStickValue = multiplier * (-Lstick.GetY());
 		float RightStickValue = multiplier * (-Rstick.GetY());
-		if(abs(LeftStickValue) < 0.5){
-			LeftStickValue = 0.5 * LeftStickValue;
-		}else if(LeftStickValue >= 0.5){
-			LeftStickValue = 1.5 * LeftStickValue - .5;
-		}else{
-			LeftStickValue = 1.5 * LeftStickValue + .5;
-		}
-		if(abs(RightStickValue) < 0.5){
-			RightStickValue = 0.5 * RightStickValue;
-		}else if(RightStickValue >= 0.5){
-			RightStickValue = 1.5 * RightStickValue - .5;
-		}else{
-			RightStickValue = 1.5 * RightStickValue + .5;
-		}
 
-		/*if(abs(LeftStickValue - RightStickValue) < STRAIT_TOLERANCE){
-			if(Drive_straight == 0){
-				Drive_straight = Gyro.GetAngle();
-			}
-			if(DriveForward == true){
-				ArcadeDrive(((LeftStickValue + RightStickValue) / 2.0f), Drive_straight * .5f);
-			}else{
-				ArcadeDrive(-((LeftStickValue + RightStickValue) / 2.0f), Drive_straight * .5f);
-			}
-		}else{
-			Drive_straight = false;
 
-		}*/
+/*		LeftStickValue = pow(LeftStickValue, 3);
+		RightStickValue = pow(RightStickValue, 3);
+
+		float JoyStickDifference = RightStickValue - RightStickValue;
+		float effect = -0.25 * pow(JoyStickDifference, 2) + 1;
+		float adjust = ((LeftStickValue + RightStickValue) / 2.0f) * Gyro.GetRate() * effect /100.0f;
+		adjust = std::max(-0.1f, std::min(0.1f, adjust));
+
+		RightStickValue = RightStickValue - adjust;
+		LeftStickValue = LeftStickValue + adjust;
 
 		if(DriveForward == true){
-					mainDrive.TankDrive(LeftStickValue, RightStickValue);
+					TankDrive(LeftStickValue, RightStickValue);
 				}else{
-					mainDrive.TankDrive(-LeftStickValue, -RightStickValue);
+					TankDrive(-LeftStickValue, -RightStickValue);
+				}*/
+		LeftStickValue = pow(LeftStickValue, 3);
+		RightStickValue = pow(RightStickValue, 3);
+		float JoyStickDifference = RightStickValue - RightStickValue;
+		float JoyStickAverage = (LeftStickValue + RightStickValue) / 2.0f;
+
+		if(DriveForward == true){
+					ArcadeDrive(JoyStickAverage, JoyStickDifference / 100);
+				}else{
+					ArcadeDrive(-JoyStickAverage, -JoyStickDifference / 100);
 				}
 	}
 
 	/*float getJoystickTransform(float input){
 		return input;
 	}*/
-
-	float Drive::GetTargetCenterX(std::vector<cv::Point> target_x){
-		float center_x = 0;
-		for(uint i = 0; i < target_x.size(); i++){
-			center_x = center_x + target_x[i].x;
-		}
-		return center_x / target_x.size();
-	}
-
-	void Drive::TrackTarget(){
-
-	}
 
 	float Drive::PullGyroAngle(){
 		return Gyro.GetAngle();

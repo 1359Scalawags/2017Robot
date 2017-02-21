@@ -64,6 +64,7 @@ public:
 	bool DriveBackwardByTime(float time);
 	float PullGyroAngle();
 	float NormalizeAngle(float angle);
+	void DriveAssist();
 };
 
 

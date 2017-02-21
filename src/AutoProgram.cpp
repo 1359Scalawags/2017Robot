@@ -175,10 +175,7 @@ public:
 		}
 	}
 	void TrackPeg(){
-		float centerX = Vision::getAverageCenterX();
-		float area = Vision::getLargestArea();
-		SmartDashboard::PutNumber("CenterX", centerX);
-		SmartDashboard::PutNumber("Area", area);
+		SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 		autostate = AutonState::GearPlacing;
 	}
 	void PlaceGear(){
