@@ -17,7 +17,7 @@ const char Platform_Motor_ID = 4;
 const char Climbing_Motor_ID = 5;
 
 const float Climbing_Motor_Speed = -1.0f;
-const float Nudge_Motor_Speed = -0.5f;
+const float Nudge_Motor_Speed = -0.3f;
 const float Unwind_Motor_Speed = 0.5f;
 
 

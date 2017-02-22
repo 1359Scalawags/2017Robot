@@ -40,6 +40,7 @@ private:
 	float last_right_speed = 0;
 
 	float Drive_straight = 0;
+	float gearing = 1.0f;
 
 	void setDriveSpeed(float multiplier);
 

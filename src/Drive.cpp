@@ -137,8 +137,15 @@
 	}
 
 	void Drive::setDriveSpeed(float multiplier){
-		float LeftStickValue = multiplier * (-Lstick.GetY());
-		float RightStickValue = multiplier * (-Rstick.GetY());
+		if(Rstick.GetRawButton(11)){ //High gear
+			gearing = 1.0f;
+			SmartDashboard::PutString("Gear", "High");
+		}else if(Rstick.GetRawButton(10)){ //Low gear
+			gearing = 0.6f;
+			SmartDashboard::PutString("Gear", "Low");
+		}
+		float LeftStickValue = multiplier * gearing * (-Lstick.GetY());
+		float RightStickValue = multiplier * gearing * (-Rstick.GetY());
 
 		//LeftStickValue = pow(LeftStickValue, 3);
 		//RightStickValue = pow(RightStickValue, 3);
