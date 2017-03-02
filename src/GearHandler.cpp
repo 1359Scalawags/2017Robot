@@ -43,5 +43,11 @@
 			}
 		}
 	}
+	void GearHandler::OpenDoor(){
+		DoorControl.Set(Servo_Open);
+	}
+	void GearHandler::CloseDoor(){
+		DoorControl.Set(Servo_Closed);
+	}
 
 

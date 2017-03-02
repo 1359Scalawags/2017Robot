@@ -49,6 +49,7 @@ private:
 	GearHandler *gear;
 	AutonState autostate;
 	AutonMiddleDirection automiddir;
+	float DriveTimeToClearShip;
 
 	//Functionptr currentprocess;
 
@@ -62,7 +63,8 @@ public:
 		drive(maindrive),
 		gear(gearhandler),
 		autostate(Driving),
-		automiddir(MidRight)
+		automiddir(MidRight),
+		DriveTimeToClearShip(1.5f)
 		//currentprocess()
 {
 
@@ -109,11 +111,11 @@ public:
 		}else if(autostate == Backing){
 			BackwardFromShip();
 		}else if(autostate == TurnToClear){
-			TurnClear(90);
+			TurnClear(RotateAngleClear);
 		}else if(autostate == DriveToClear){
 			DriveClear();
 		}else if(autostate == TurnToLine){
-			TurnLine(90);
+			TurnLine(RotateAngleLine);
 		}else if(autostate == DriveToLine){
 			DriveLine();
 		}else{
@@ -184,15 +186,21 @@ public:
 		autostate = AutonState::DropGear;
 	}
 	void DropingGear(){//drops the gear
+		gear->OpenDoor();
 		autostate = AutonState::Backing;
 	}
 	void TurnClear(float angle){ //rotates robot to clear the ship
 		if(drive->TurnToAngle(angle)){
-			autostate = AutonState::DriveToClear;
+			if(position == Middle){
+				autostate = AutonState::DriveToClear;
+			}else{
+				autostate = AutonState::TurnToLine;
+			}
+
 		}
 	}
 	void DriveClear(){ //drives robot to clear the ship
-		if(drive->DriveForwardByTime(1.5f)){
+		if(drive->DriveForwardByTime(DriveTimeToClearShip)){
 			autostate = AutonState::TurnToLine;
 		}
 	}

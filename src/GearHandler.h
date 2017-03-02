@@ -39,6 +39,8 @@ public:
 	GearHandler(Joystick* Ejoy);
 	void TeleOp();
 	inline void SetServo();
+	void OpenDoor();
+	void CloseDoor();
 };
 
 
