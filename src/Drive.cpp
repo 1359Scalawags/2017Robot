@@ -170,7 +170,7 @@
 //		LeftStickValue = LeftStickValue + adjust;
 
 		if(DriveForward == true){
-					TankDrive(LeftStickValue, RightStickValue);
+					TankDrive(RightStickValue, LeftStickValue);
 				}else{
 					TankDrive(-LeftStickValue, -RightStickValue);
 				}
