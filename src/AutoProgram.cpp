@@ -97,9 +97,9 @@ public:
 	void Auton(){
 
 		if(autostate == Driving) {
-			AutonForward();
+			ForwardFromWall();
 		}else if(autostate == TurningToPeg){
-			AutonTurnToPeg(RotateAnglePeg);
+			TurnToPeg(RotateAnglePeg);
 		}else if(autostate == TargetPeg){
 			TrackPeg();
 		}else if(autostate == GearPlacing){
@@ -107,7 +107,7 @@ public:
 		}else if(autostate == DropGear){
 			DropingGear();
 		}else if(autostate == Backing){
-			AutonBackward();
+			BackwardFromShip();
 		}else if(autostate == TurnToClear){
 			TurnClear(90);
 		}else if(autostate == DriveToClear){
@@ -131,26 +131,28 @@ public:
 
 		}*/
 	}
-	void AutonLeft(){
+
+/*	void AutonLeft(){
 		drive->TurnToAngle(90);
 	}
 	void AutonRight(){
 		drive->TurnToAngle(-90);
-	}
+	}*/
 
-	void AutonTurnToPeg(float angle){
+	void TurnToPeg(float angle){ //rotates robot to face peg
 		if(drive->TurnToAngle(angle)){
 			//autostate = AutonState::TargetPeg;
 			autostate = AutonState::Stop;
 		}
 	}
-	void AutonMiddle(){
-		if(autostate == Driving){
-			AutonForward();
-		}
-	}
 
-	void AutonForward(){
+/*	void AutonMiddle(){
+		if(autostate == Driving){
+			ForwardFromWall();
+		}
+	}*/
+
+	void ForwardFromWall(){ //Drives robot away from wall
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
 		if(drive->DriveForwardByTime(1.5f)){
@@ -164,7 +166,7 @@ public:
 			}
 		}
 	}
-	void AutonBackward(){
+	void BackwardFromShip(){ //drives away from ship
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
 		if(drive->DriveBackwardByTime(1.0f)){
@@ -174,32 +176,32 @@ public:
 
 		}
 	}
-	void TrackPeg(){
+	void TrackPeg(){ //finds and targets the peg
 		SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 		autostate = AutonState::GearPlacing;
 	}
-	void PlaceGear(){
+	void PlaceGear(){ //places the gear
 		autostate = AutonState::DropGear;
 	}
-	void DropingGear(){
+	void DropingGear(){//drops the gear
 		autostate = AutonState::Backing;
 	}
-	void TurnClear(float angle){
+	void TurnClear(float angle){ //rotates robot to clear the ship
 		if(drive->TurnToAngle(angle)){
 			autostate = AutonState::DriveToClear;
 		}
 	}
-	void DriveClear(){
+	void DriveClear(){ //drives robot to clear the ship
 		if(drive->DriveForwardByTime(1.5f)){
 			autostate = AutonState::TurnToLine;
 		}
 	}
-	void TurnLine(float angle){
+	void TurnLine(float angle){ //turns to face the field line
 		if(drive->TurnToAngle(angle)){
 			autostate = AutonState::DriveToLine;
 		}
 	}
-	void DriveLine(){
+	void DriveLine(){ //drives across the field line
 		if(drive->DriveForwardByTime(1.5f)){
 			autostate = AutonState::Stop;
 		}
