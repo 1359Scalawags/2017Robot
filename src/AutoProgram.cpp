@@ -75,7 +75,10 @@ public:
 		drive->ResetTimer();
 		//currentprocess = &AutoProgram::AutonForward;
 	}
-	void ChangeState(){}
+	void ChangeState(AutonState newstate){
+		autostate = newstate;
+		drive->ResetTimer();
+	}
 	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
 		position = field_position;
@@ -117,7 +120,7 @@ public:
 		}
 #else
 		else if(autostate == TurningToPeg || autostate == TargetPeg){
-			autostate = TurnToClear;
+			ChangeState(TurnToClear);
 		}
 #endif
 		else if(autostate == TurnToClear){
@@ -154,7 +157,7 @@ public:
 	void TurnToPeg(float angle){ //rotates robot to face peg
 		if(drive->TurnToAngle(angle)){
 			//autostate = AutonState::TargetPeg;
-			autostate = AutonState::Stop;
+			ChangeState(Stop);
 		}
 	}
 
@@ -174,9 +177,9 @@ public:
 #endif
 			//currentprocess = &AutoProgram::Rotate;
 			if(position == Middle){
-				autostate = AutonState::TargetPeg;
+				ChangeState(AutonState::TargetPeg);
 			}else if(position == Left || position == Right){
-				autostate = TurningToPeg;
+				ChangeState(TurningToPeg);
 			}else if(position == Test){
 
 			}
@@ -187,28 +190,28 @@ public:
 		//go to next phase
 		if(drive->DriveBackwardByTime(1.0f)){
 			//currentprocess = &AutoProgram::Rotate;
-			autostate = AutonState::TurnToClear;
+			ChangeState(AutonState::TurnToClear);
 		}else{
 
 		}
 	}
 	void TrackPeg(){ //finds and targets the peg
 		SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
-		autostate = AutonState::GearPlacing;
+		ChangeState(AutonState::GearPlacing);
 	}
 	void PlaceGear(){ //places the gear
-		autostate = AutonState::DropGear;
+		ChangeState(AutonState::DropGear);
 	}
 	void DropingGear(){//drops the gear
 		gear->OpenDoor();
-		autostate = AutonState::Backing;
+		ChangeState(AutonState::Backing);
 	}
 	void TurnClear(float angle){ //rotates robot to clear the ship
 		if(drive->TurnToAngle(angle)){
 			if(position == Middle){
-				autostate = AutonState::DriveToClear;
+				ChangeState(AutonState::DriveToClear);
 			}else{
-				autostate = AutonState::TurnToLine;
+				ChangeState(AutonState::TurnToLine);
 			}
 
 		}
@@ -220,7 +223,7 @@ public:
 		if(drive->DriveToDistance()){
 #endif
 
-			autostate = AutonState::TurnToLine;
+			ChangeState(AutonState::TurnToLine);
 		}
 	}
 	void TurnLine(float angle){ //turns to face the field line
@@ -235,7 +238,7 @@ public:
 		if(drive->DriveToDistance()){
 #endif
 
-			autostate = AutonState::Stop;
+			ChangeState(AutonState::Stop);
 		}
 	}
 };
