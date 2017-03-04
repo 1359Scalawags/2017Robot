@@ -71,9 +71,9 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 			average_centerx += sum_centerx + rect.x + rect.width /2;
 			target_count++;
 		}
-		average_centerx = sum_centerx / target_count;
 
 		if(target_count > 0){
+			average_centerx = sum_centerx / target_count;
 			aproxamat_angle_to_target = GetAproxamatAngle(average_centerx, largest_width);
 		}else{
 			aproxamat_angle_to_target = 0.0f;
