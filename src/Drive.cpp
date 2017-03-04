@@ -64,7 +64,7 @@
 	void Drive::TeleOp(){
 
 		SetRobotFront();
-		setDriveSpeed(1.5f);
+		setDriveSpeed(1.0f);
 		SmartDashboard::PutNumber("Sonar", Sonar.GetAverageValue());
 	}
 
@@ -144,8 +144,8 @@
 			gearing = LowGear;
 			SmartDashboard::PutString("Gear", "Low");
 		}
-		float LeftStickValue = multiplier * gearing * (-Lstick.GetY());
-		float RightStickValue = multiplier * gearing * (-Rstick.GetY());
+		float LeftStickValue = (-Lstick.GetY());
+		float RightStickValue = (-Rstick.GetY());
 
 		//LeftStickValue = pow(LeftStickValue, 3);
 		//RightStickValue = pow(RightStickValue, 3);
@@ -160,6 +160,9 @@
 		} else {
 			RightStickValue = -pow(RightStickValue, 2);
 		}
+
+		LeftStickValue = multiplier * gearing * LeftStickValue;
+		RightStickValue = multiplier * gearing * RightStickValue;
 
 //		float JoyStickDifference = RightStickValue - RightStickValue;
 //		float effect = -0.25 * pow(JoyStickDifference, 2) + 1;

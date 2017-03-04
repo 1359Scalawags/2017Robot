@@ -18,7 +18,6 @@ enum PlatformState{
 
 class FuelHopper{
 private:
-	float SpeedMultiplier = .75; //For debuging and testing. Remove for competition.
 	Joystick* Estick;
 	DigitalInput PlatformUpLimit;
 	DigitalInput PlatformDownLimit;

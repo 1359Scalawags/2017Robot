@@ -57,13 +57,13 @@ const char CurrentSensor_ID = 3;
 const float Servo_Open = 0.0f;
 const float Servo_Closed = 1.0f;
 
-const char AVERAGE_WEIGHT = 10;
+const char AVERAGE_WEIGHT = 5;
 
 const bool Pressed = false;
 const bool Not_Pressed = true;
 const float Motor_Offset_Value = 1973.0f;
 const float HighGear = 1.0;
-const float LowGear = 0.6;
+const float LowGear = 0.8;
 
 
 

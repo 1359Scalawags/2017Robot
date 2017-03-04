@@ -10,6 +10,9 @@
  *      Author: Destin
  */
 
+#define DEBUG
+//#define DOGEARDROP
+
 enum StartingPosition{
 	Left = 0,
 	Middle = 1,
@@ -100,7 +103,9 @@ public:
 
 		if(autostate == Driving) {
 			ForwardFromWall();
-		}else if(autostate == TurningToPeg){
+		}
+#ifdef DOGEARDROP
+		else if(autostate == TurningToPeg){
 			TurnToPeg(RotateAnglePeg);
 		}else if(autostate == TargetPeg){
 			TrackPeg();
@@ -110,7 +115,13 @@ public:
 			DropingGear();
 		}else if(autostate == Backing){
 			BackwardFromShip();
-		}else if(autostate == TurnToClear){
+		}
+#else
+		else if(autostate == TurningToPeg){
+			autostate = TurnToClear;
+		}
+#endif
+		else if(autostate == TurnToClear){
 			TurnClear(RotateAngleClear);
 		}else if(autostate == DriveToClear){
 			DriveClear();
@@ -157,7 +168,11 @@ public:
 	void ForwardFromWall(){ //Drives robot away from wall
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
+#ifdef DEBUG
 		if(drive->DriveForwardByTime(1.5f)){
+#else
+		if(drive->DiveToDistance(DisFromWall)){
+#endif
 			//currentprocess = &AutoProgram::Rotate;
 			if(position == Middle){
 				autostate = AutonState::TargetPeg;
@@ -200,7 +215,12 @@ public:
 		}
 	}
 	void DriveClear(){ //drives robot to clear the ship
+#ifdef DEBUG
 		if(drive->DriveForwardByTime(DriveTimeToClearShip)){
+#else
+		if(drive->DriveToDistance()){
+#endif
+
 			autostate = AutonState::TurnToLine;
 		}
 	}
@@ -210,7 +230,12 @@ public:
 		}
 	}
 	void DriveLine(){ //drives across the field line
+#ifdef DEBUG
 		if(drive->DriveForwardByTime(1.5f)){
+#else
+		if(drive->DriveToDistance()){
+#endif
+
 			autostate = AutonState::Stop;
 		}
 	}
