@@ -75,6 +75,7 @@ public:
 		drive->ResetTimer();
 		//currentprocess = &AutoProgram::AutonForward;
 	}
+	void ChangeState(){}
 	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
 		position = field_position;
