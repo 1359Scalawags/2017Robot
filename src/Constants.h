@@ -47,6 +47,8 @@ const char DriveForward_Button_ID = 3;
 const char DriveBackward_Button_ID = 2;
 const char ClimberUnwindA_Button_ID = 7;
 const char ClimberUnwindB_Button_ID = 10;
+const char HighGearA_Button_ID = 1;
+const char HighGearB_Button_ID = 1;
 
 const char SonarLeft_ID = 0;
 const char SonarRight_ID = 1;
@@ -60,6 +62,8 @@ const char AVERAGE_WEIGHT = 10;
 const bool Pressed = false;
 const bool Not_Pressed = true;
 const float Motor_Offset_Value = 1973.0f;
+const float HighGear = 1.0;
+const float LowGear = 0.6;
 
 
 
