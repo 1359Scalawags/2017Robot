@@ -115,7 +115,7 @@ public:
 			BackwardFromShip();
 		}
 #else
-		else if(autostate == TurningToPeg){
+		else if(autostate == TurningToPeg || autostate == TargetPeg){
 			autostate = TurnToClear;
 		}
 #endif
