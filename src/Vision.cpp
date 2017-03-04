@@ -35,8 +35,10 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 			            	continue;
 			            }else{
 			            	gap.Process(source);
-			            ContourOutput = gap.GetFilterContoursOutput();
-			            VisionTargets();
+			            	ContourOutput = gap.GetFilterContoursOutput();
+#ifdef DOGEARDROP
+			            	VisionTargets();
+#endif
 			            }
 
 			            //cvtColor(source, output, cv::COLOR_BGR2GRAY);

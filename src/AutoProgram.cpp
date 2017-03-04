@@ -10,8 +10,6 @@
  *      Author: Destin
  */
 
-#define DEBUG
-//#define DOGEARDROP
 
 enum StartingPosition{
 	Left = 0,

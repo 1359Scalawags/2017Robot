@@ -65,6 +65,7 @@ const float Motor_Offset_Value = 1973.0f;
 const float HighGear = 1.0;
 const float LowGear = 0.8;
 
-
+#define DEBUG
+//#define DOGEARDROP
 
 #endif /* SRC_CONSTANTS_H_ */
