@@ -17,8 +17,9 @@
 			DriveForward(true),
 			Gyro(),
 			Sonar(SonarLeft_ID),
-			autoTimer(new Timer()),
-			Drive_straight(0)
+			autoTimer(),
+			Drive_straight(0),
+			startTime(0)
 	{
 		mainDrive.SetExpiration(0.1);
 		Sonar.SetAverageBits(4);
@@ -27,8 +28,12 @@
 	}
 
 	void Drive::ResetTimer(){
-		autoTimer->Reset();
-		autoTimer->Start();
+		autoTimer.Start();
+		startTime = autoTimer.Get();
+	}
+
+	float Drive::GetTime(){
+		return autoTimer.Get() - startTime;
 	}
 
 	void Drive::SetRobotFront(){
@@ -70,7 +75,7 @@
 
 	bool Drive::DriveForwardByTime(float time){
 		float angle = Gyro.GetAngle();
-			if(autoTimer->Get() < time){
+			if(GetTime() < time){
 				ArcadeDrive(.5f, angle * .5f);
 				return false;
 			}else{
@@ -81,7 +86,7 @@
 	bool Drive::DriveBackwardByTime(float time){
 			//float angle = Gyro.GetAngle();
 			float angle = 0.0f;
-				if(autoTimer->Get() < time){
+				if(GetTime() < time){
 					ArcadeDrive(-.5f, -angle * .5f);
 					return false;
 				}else{

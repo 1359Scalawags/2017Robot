@@ -73,11 +73,12 @@ public:
 }
 	void AutoInit(){
 		drive->ResetTimer();
+		ChangeState(Driving);
 		//currentprocess = &AutoProgram::AutonForward;
 	}
 	void ChangeState(AutonState newstate){
-		autostate = newstate;
 		drive->ResetTimer();
+		autostate = newstate;
 	}
 	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
@@ -86,6 +87,8 @@ public:
 			//need to move forward 3ft
 			DisFromWall = 36;
 			RotateAnglePeg = 0;
+			RotateAngleClear = 90;
+			RotateAngleLine = -90;
 
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
@@ -93,7 +96,7 @@ public:
 			RotateAnglePeg = 60;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
-		}else if(position == StartingPosition::Right){
+		}else{
 			//need to move forward 16ft
 			DisFromWall = 192;
 			RotateAnglePeg = -60;

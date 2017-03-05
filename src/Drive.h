@@ -32,14 +32,16 @@ private:
 	ADXRS450_Gyro Gyro;
 	AnalogInput Sonar;
 
-	Timer* autoTimer;
+	Timer autoTimer;
+
 
 	float last_arcade_speed = 0;
 	float last_rotate_speed = 0;
 	float last_left_speed = 0;
 	float last_right_speed = 0;
 
-	float Drive_straight = 0;
+	float Drive_straight;
+	float startTime;
 	float gearing = 1.0f;
 
 	void setDriveSpeed(float multiplier);
@@ -66,6 +68,7 @@ public:
 	float PullGyroAngle();
 	float NormalizeAngle(float angle);
 	void DriveAssist();
+	float GetTime();
 };
 
 
