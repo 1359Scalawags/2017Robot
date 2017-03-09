@@ -167,6 +167,7 @@ public:
 	void OperatorControl() override {
 //		mainDrive.SetSafetyEnabled(true);
 		drive.Safety();
+		drive.InvertDrive(false);
 		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();

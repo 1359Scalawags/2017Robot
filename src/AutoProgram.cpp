@@ -74,6 +74,7 @@ public:
 	void AutoInit(){
 		drive->ResetTimer();
 		ChangeState(Driving);
+		drive->InvertDrive(true);
 		//currentprocess = &AutoProgram::AutonForward;
 	}
 	void ChangeState(AutonState newstate){

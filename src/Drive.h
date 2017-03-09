@@ -60,6 +60,7 @@ public:
 	void AutonMiddle();
 	void AutonRight();
 	void ResetTimer();
+	void InvertDrive(bool invert);
 	bool TurnToAngle(float targetAngle);
 	void TankDrive(float target_left, float target_right);
 	void ArcadeDrive(float target_speed, float rotate_speed);

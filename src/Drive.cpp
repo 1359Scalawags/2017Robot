@@ -36,6 +36,12 @@
 		return autoTimer.Get() - startTime;
 	}
 
+	void Drive::InvertDrive(bool invert){
+		mainDrive.SetInvertedMotor(RobotDrive::MotorType::kFrontLeftMotor, invert);
+		mainDrive.SetInvertedMotor(RobotDrive::MotorType::kFrontRightMotor, invert);
+		mainDrive.SetInvertedMotor(RobotDrive::MotorType::kRearLeftMotor, invert);
+		mainDrive.SetInvertedMotor(RobotDrive::MotorType::kRearRightMotor, invert);
+	}
 	void Drive::SetRobotFront(){
 		if(Lstick.GetRawButton(DriveForward_Button_ID) || Rstick.GetRawButton(DriveForward_Button_ID)){
 			DriveForward = true;
