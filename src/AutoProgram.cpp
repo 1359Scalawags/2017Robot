@@ -109,6 +109,12 @@ public:
 
 		if(autostate == Driving) {
 			ForwardFromWall();
+		}else if(autostate == Backing){
+			Backward();
+		}else if(autostate == TurningToPeg){
+			TurnToPeg(-120);
+
+/*
 		}
 #ifdef DOGEARDROP
 		else if(autostate == TurningToPeg){
@@ -135,6 +141,7 @@ public:
 			TurnLine(RotateAngleLine);
 		}else if(autostate == DriveToLine){
 			DriveLine();
+*/
 		}else{
 			drive->ArcadeDrive(0.0f, 0.0f);
 		}
@@ -175,17 +182,17 @@ public:
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
 #ifdef DEBUG
-		if(drive->DriveForwardByTime(1.5f)){
+		if(drive->DriveForwardByTime(6.0f)){
 #else
 		if(drive->DiveToDistance(DisFromWall)){
 #endif
 			//currentprocess = &AutoProgram::Rotate;
 			if(position == Middle){
-				ChangeState(AutonState::TargetPeg);
+				ChangeState(Backing);
 			}else if(position == Left || position == Right){
-				ChangeState(TurningToPeg);
+				ChangeState(Backing);
 			}else if(position == Test){
-
+				ChangeState(AutonState::Stop);
 			}
 		}
 	}
@@ -199,6 +206,17 @@ public:
 
 		}
 	}
+	void Backward(){ //drives away from ship
+		//if(drive->DriveToDistance(DisFromWall)){
+		//go to next phase
+		if(drive->DriveBackwardByTime(3.0f)){
+			//currentprocess = &AutoProgram::Rotate;
+			ChangeState(AutonState::TurningToPeg);
+		}else{
+
+		}
+	}
+
 	void TrackPeg(){ //finds and targets the peg
 		SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 		ChangeState(AutonState::GearPlacing);

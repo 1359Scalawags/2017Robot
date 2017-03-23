@@ -5,13 +5,12 @@
 #include <AutoProgram.cpp>
 #include <cmath>
 #include <Drive.h>
-#include <FuelHopper.cpp>
 #include <GearHandler.h>
 #include <Climber.cpp>
 #include <GripAreaPipeline.h>
 #include <Vision.h>
 #include <algorithm>
-
+//#include <FuelHopper.cpp>
 
 
 
@@ -21,7 +20,7 @@ class Robot: public frc::SampleRobot {
 	Drive drive;
 	AutoProgram auton;
 	Joystick Estick;
-	FuelHopper hopper;
+//	FuelHopper hopper;
 	GearHandler handler;
 	Climber climber;
 
@@ -54,7 +53,7 @@ public:
 		drive(),
 		auton(&drive, &handler),
 		Estick(Extra_Joystick_Port),
-		hopper(&Estick),
+//		hopper(&Estick),
 		handler(&Estick),
 		climber(&Estick)
 		//Gyro()
@@ -99,15 +98,17 @@ public:
 	}
 
 	void RobotChooser(){
-		chooser.AddDefault("Middle", &middle);
-		chooser.AddObject("Left", &left);
+		chooser.AddObject("Middle", &middle);
+		chooser.AddDefault("Left", &left);
 		chooser.AddObject("Right", &right);
 		chooser.AddObject("Test", &test);
 		SmartDashboard::PutData("AutonModes", &chooser);
 
+
 		MiddleDirChooser.AddDefault("Middle Left", &midleft);
 		MiddleDirChooser.AddObject("Middle Right", &midright);
 		SmartDashboard::PutData("Middle Direction", &MiddleDirChooser);
+
 
 		AngleChooser.AddDefault("Test1", &test1);
 		AngleChooser.AddObject("Test2", &test2);
@@ -175,7 +176,7 @@ public:
 
 //			setDriveSpeed();
 			drive.TeleOp();
-			hopper.TeleOp();
+			//hopper.TeleOp();
 			handler.TeleOp();
 			climber.TeleOp();
 			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
