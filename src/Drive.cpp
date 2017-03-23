@@ -56,6 +56,7 @@
 
 	void Drive::GyroReset(){
 		Gyro.Reset();
+		printf("Gyro was just reset!");
 	}
 	void Drive::Safety(){
 		mainDrive.SetSafetyEnabled(true);

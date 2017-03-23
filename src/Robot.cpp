@@ -10,6 +10,7 @@
 #include <GripAreaPipeline.h>
 #include <Vision.h>
 #include <algorithm>
+#include <iostream>
 //#include <FuelHopper.cpp>
 
 //Test for Vision Branch
@@ -169,6 +170,8 @@ public:
 //		mainDrive.SetSafetyEnabled(true);
 		drive.Safety();
 		drive.InvertDrive(false);
+		printf("Tellop Is Enabled");
+		std::cout << "Tellop is Enabled\n" << "...\n" << "HI Destin";
 		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();
