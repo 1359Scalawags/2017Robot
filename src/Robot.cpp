@@ -175,6 +175,12 @@ public:
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
 		std::cout << "Tellop is Enabled\n" << "...\n" << "GO\n";
+		std::cout << "  _________             .__                                       \n"
+				<<" /   _____/ ____ _____  |  | _____ __  _  _______     ____  ______\n"
+				<<" \\_____  \\_/ ___\\\\__  \\ |  | \\__  \\\\ \\/ \\/ /\\__  \\   / ___\\/  ___/\n"
+				<<" /        \\  \\___ / __ \\|  |__/ __ \\\\     /  / __ \\_/ /_/  >___ \\ \n"
+				<<"/_______  /\\___  >____  /____(____  /\\/\\_/  (____  /\\___  /____  >\n"
+				<<"        \\/     \\/     \\/          \\/             \\//_____/     \\/ \n";
 		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();

@@ -20,6 +20,8 @@ const float Climbing_Motor_Speed = -1.0f;
 const float Nudge_Motor_Speed = -0.3f;
 const float Unwind_Motor_Speed = 0.5f;
 
+const float VisionResolutionX = 320;
+const float VisionCenterX = VisionResolutionX / 2;
 
 const char Door_Servo_ID = 9;
 
@@ -50,6 +52,7 @@ const char ClimberUnwindB_Button_ID = 10;
 const char HighGearA_Button_ID = 1;
 const char HighGearB_Button_ID = 1;
 const char ShowStats_Button_ID = 8;
+const char ShowStatsPeriodicly_Button_ID = 9;
 
 const char SonarLeft_ID = 0;
 const char SonarRight_ID = 1;

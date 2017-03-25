@@ -13,6 +13,10 @@
 class ShowStats{
 	private:
 		Joystick* Estick;
+		int showstatscountdown = 20;
+		bool periodiclyenable = false;
+		int SSPbuttoncooldown = 20;
+		bool canpressSSP = true;
 	public:
 		ShowStats(Joystick* Ejoy):
 			Estick(Ejoy)
@@ -25,6 +29,24 @@ class ShowStats{
 				std::cout << "--------------------------------------------\n";
 				std::cout << "Stats:\n";
 				Vision::ShowVisionStats();
+			}
+			if(Estick->GetRawButton(ShowStatsPeriodicly_Button_ID) && canpressSSP){
+				periodiclyenable = true;
+				canpressSSP = false;
+			}
+			if(periodiclyenable == true){
+				showstatscountdown--;
+				if(showstatscountdown < 0){
+					Vision::ShowVisionStats();
+					showstatscountdown = 20;
+				}
+			}
+			if(canpressSSP == false){
+				SSPbuttoncooldown--;
+				if(SSPbuttoncooldown < 0){
+					canpressSSP = true;
+					SSPbuttoncooldown = 20;
+				}
 			}
 		}
 
