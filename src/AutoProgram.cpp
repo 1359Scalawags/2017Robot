@@ -46,6 +46,8 @@ private:
 	float RotateAnglePeg;
 	float RotateAngleLine;
 	float RotateAngleClear;
+	float DriveByTime;
+	float DriveBackByTime;
 	Drive *drive;
 	GearHandler *gear;
 	AutonState autostate;
@@ -61,6 +63,8 @@ public:
 		RotateAnglePeg(0),
 		RotateAngleLine(0),
 		RotateAngleClear(0),
+		DriveByTime(0),
+		DriveBackByTime(0),
 		drive(maindrive),
 		gear(gearhandler),
 		autostate(Driving),
@@ -74,11 +78,11 @@ public:
 
 	void AutonLeft(){
 		if(autostate == Driving){
-			if(ForwardFromWall()){
+			if(ForwardFromWall(DriveByTime)){
 				ChangeState(Backing);
 			}
 		}else if(autostate == Backing){
-			if(Backward()){
+			if(Backward(DriveBackByTime)){
 				ChangeState(TurningToPeg);
 			}
 		}else if(autostate == TurningToPeg){
@@ -88,7 +92,19 @@ public:
 		}
 	}
 	void AutonRight(){
-
+		if(autostate == Driving){
+			if(ForwardFromWall(DriveByTime)){
+				ChangeState(Backing);
+			}
+		}else if(autostate == Backing){
+			if(Backward(DriveBackByTime)){
+				ChangeState(TurningToPeg);
+			}
+		}else if(autostate == TurningToPeg){
+			if(TurnToPeg(RotateAnglePeg)){
+				ChangeState(Stop);
+			}
+		}
 	}
 	void AutonMiddle(){
 
@@ -110,6 +126,7 @@ public:
 		if(position == StartingPosition::Middle){
 			//need to move forward 3ft
 			DisFromWall = 36;
+			DriveByTime = 5;
 			RotateAnglePeg = 0;
 			RotateAngleClear = 90;
 			RotateAngleLine = -90;
@@ -117,13 +134,15 @@ public:
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
+			DriveByTime = 6;
 			RotateAnglePeg = -120;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}else{
 			//need to move forward 16ft
 			DisFromWall = 192;
-			RotateAnglePeg = -60;
+			DriveByTime = 6;
+			RotateAnglePeg = 120;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}
@@ -131,9 +150,9 @@ public:
 	void Auton(){
 
 		if(autostate == Driving) {
-			ForwardFromWall();
+			//ForwardFromWall();
 		}else if(autostate == Backing){
-			Backward();
+			//Backward();
 		}else if(autostate == TurningToPeg){
 			TurnToPeg(-120);
 
@@ -198,8 +217,8 @@ public:
 		}
 	}*/
 
-	bool ForwardFromWall(){ //Drives robot away from wall
-		return drive->DriveForwardByTime(6.0f);
+	bool ForwardFromWall(float Drivetime){ //Drives robot away from wall
+		return drive->DriveForwardByTime(Drivetime);
 	}
 	void BackwardFromShip(){ //drives away from ship
 		//if(drive->DriveToDistance(DisFromWall)){
@@ -211,8 +230,8 @@ public:
 
 		}
 	}
-	bool Backward(){ //drives away from ship
-		return drive->DriveBackwardByTime(3.0f);
+	bool Backward(float Drivetime){ //drives away from ship
+		return drive->DriveBackwardByTime(Drivetime);
 	}
 
 	void TrackPeg(){ //finds and targets the peg

@@ -166,7 +166,7 @@ public:
 			}else if(StartingPosition::Right){
 				auton.AutonRight();
 			}
-				auton.Auton();
+				//auton.Auton();
 			Wait(0.005);
 
 		}
