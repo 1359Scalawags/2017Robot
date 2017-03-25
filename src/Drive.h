@@ -70,6 +70,7 @@ public:
 	float NormalizeAngle(float angle);
 	void DriveAssist();
 	float GetTime();
+	void ShowStats();
 };
 
 

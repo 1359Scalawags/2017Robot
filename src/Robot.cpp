@@ -11,6 +11,7 @@
 #include <Vision.h>
 #include <algorithm>
 #include <iostream>
+#include <ShowStats.cpp>
 //#include <FuelHopper.cpp>
 
 //Test for Vision Branch
@@ -24,6 +25,7 @@ class Robot: public frc::SampleRobot {
 //	FuelHopper hopper;
 	GearHandler handler;
 	Climber climber;
+	ShowStats showstats;
 
 	frc::SendableChooser<int*> chooser;
 	int left = 0;
@@ -56,7 +58,8 @@ public:
 		Estick(Extra_Joystick_Port),
 //		hopper(&Estick),
 		handler(&Estick),
-		climber(&Estick)
+		climber(&Estick),
+		showstats(&Estick)
 		//Gyro()
 	{
 
@@ -171,7 +174,7 @@ public:
 		drive.Safety();
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
-		std::cout << "Tellop is Enabled\n" << "...\n" << "HI Destin";
+		std::cout << "Tellop is Enabled\n" << "...\n" << "GO";
 		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();
@@ -182,6 +185,7 @@ public:
 			//hopper.TeleOp();
 			handler.TeleOp();
 			climber.TeleOp();
+			showstats.DesplayStats();
 			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
 			//int large_angle = (int)(angle * 1000);
 			//angle = (large_angle % 360000) / 1000.0f;

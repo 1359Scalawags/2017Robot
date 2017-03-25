@@ -49,6 +49,7 @@ const char ClimberUnwindA_Button_ID = 7;
 const char ClimberUnwindB_Button_ID = 10;
 const char HighGearA_Button_ID = 1;
 const char HighGearB_Button_ID = 1;
+const char ShowStats_Button_ID = 8;
 
 const char SonarLeft_ID = 0;
 const char SonarRight_ID = 1;

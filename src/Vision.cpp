@@ -11,6 +11,7 @@
  *      Author: Destin
  */
 #define PI 3.14159265
+#define DOGEARDROP
 
 static std::vector<std::vector<cv::Point>>* ContourOutput;
 	static float average_centerx = 0.0f;
@@ -37,7 +38,9 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 			            	gap.Process(source);
 			            	ContourOutput = gap.GetFilterContoursOutput();
 #ifdef DOGEARDROP
+			            	if(ContourOutput != NULL){
 			            	VisionTargets();
+			            	}
 #endif
 			            }
 
