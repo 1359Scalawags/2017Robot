@@ -42,7 +42,7 @@ class GripAreaPipeline {
 		cv::Mat* GetCvErodeOutput();
 		cv::Mat* GetCvDilateOutput();
 		std::vector<std::vector<cv::Point> >* GetFindContoursOutput();
-		std::vector<std::vector<cv::Point> >* GetFilterContoursOutput();
+		std::vector<std::vector<cv::Point> > GetFilterContoursOutput();
 };
 
 

@@ -28,12 +28,12 @@ class Vision{
 	static float getAverageCenterX();
 	static void VisionTargets();
 	static float getLargestArea();
+	static float GetAproxamatAngle(int target_center_x, int target_width);
 	public:
 	Vision();
 	static void VisionThread();
 	static int GetTargetNumber();
 	static void UpdateSmartDashboard();
-	static float GetAproxamatAngle(int target_center_x, int target_width);
 	static float getAproxAngleToTarget();
 	static void ShowVisionStats();
 };

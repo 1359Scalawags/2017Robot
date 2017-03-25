@@ -71,6 +71,29 @@ public:
 
 
 }
+
+	void AutonLeft(){
+		if(autostate == Driving){
+			if(ForwardFromWall()){
+				ChangeState(Backing);
+			}
+		}else if(autostate == Backing){
+			if(Backward()){
+				ChangeState(TurningToPeg);
+			}
+		}else if(autostate == TurningToPeg){
+			if(TurnToPeg(RotateAnglePeg)){
+				ChangeState(Stop);
+			}
+		}
+	}
+	void AutonRight(){
+
+	}
+	void AutonMiddle(){
+
+	}
+
 	void AutoInit(){
 		drive->ResetTimer();
 		ChangeState(Driving);
@@ -94,7 +117,7 @@ public:
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
-			RotateAnglePeg = 60;
+			RotateAnglePeg = -120;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}else{
@@ -165,11 +188,8 @@ public:
 		drive->TurnToAngle(-90);
 	}*/
 
-	void TurnToPeg(float angle){ //rotates robot to face peg
-		if(drive->TurnToAngle(angle)){
-			//autostate = AutonState::TargetPeg;
-			ChangeState(Stop);
-		}
+	bool TurnToPeg(float angle){ //rotates robot to face peg
+		return drive->TurnToAngle(angle);
 	}
 
 /*	void AutonMiddle(){
@@ -178,23 +198,8 @@ public:
 		}
 	}*/
 
-	void ForwardFromWall(){ //Drives robot away from wall
-		//if(drive->DriveToDistance(DisFromWall)){
-		//go to next phase
-#ifdef DEBUG
-		if(drive->DriveForwardByTime(6.0f)){
-#else
-		if(drive->DiveToDistance(DisFromWall)){
-#endif
-			//currentprocess = &AutoProgram::Rotate;
-			if(position == Middle){
-				ChangeState(Backing);
-			}else if(position == Left || position == Right){
-				ChangeState(Backing);
-			}else if(position == Test){
-				ChangeState(AutonState::Stop);
-			}
-		}
+	bool ForwardFromWall(){ //Drives robot away from wall
+		return drive->DriveForwardByTime(6.0f);
 	}
 	void BackwardFromShip(){ //drives away from ship
 		//if(drive->DriveToDistance(DisFromWall)){
@@ -206,15 +211,8 @@ public:
 
 		}
 	}
-	void Backward(){ //drives away from ship
-		//if(drive->DriveToDistance(DisFromWall)){
-		//go to next phase
-		if(drive->DriveBackwardByTime(3.0f)){
-			//currentprocess = &AutoProgram::Rotate;
-			ChangeState(AutonState::TurningToPeg);
-		}else{
-
-		}
+	bool Backward(){ //drives away from ship
+		return drive->DriveBackwardByTime(3.0f);
 	}
 
 	void TrackPeg(){ //finds and targets the peg

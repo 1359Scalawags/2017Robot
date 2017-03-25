@@ -159,6 +159,13 @@ public:
 			}
 			auton.AutoInit();
 		while(IsAutonomous() && IsEnabled()){
+			if(StartingPosition::Left){
+				auton.AutonLeft();
+			}else if(StartingPosition::Middle){
+				auton.AutonMiddle();
+			}else if(StartingPosition::Right){
+				auton.AutonRight();
+			}
 				auton.Auton();
 			Wait(0.005);
 
@@ -175,6 +182,12 @@ public:
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
 		std::cout << "Tellop is Enabled\n" << "...\n" << "GO\n";
+		std::cout << " ____________  .________________ \n"
+				<<"/_   \\_____  \\ |   ____/   __   \\\n"
+				<<" |   | _(__  < |____  \\\\____    /\n"
+				<<" |   |/       \\/       \\  /    / \n"
+				<<" |___/______  /______  / /____/  \n"
+				<<"            \\/       \\/          \n";
 		std::cout << "  _________             .__                                       \n"
 				<<" /   _____/ ____ _____  |  | _____ __  _  _______     ____  ______\n"
 				<<" \\_____  \\_/ ___\\\\__  \\ |  | \\__  \\\\ \\/ \\/ /\\__  \\   / ___\\/  ___/\n"
@@ -222,7 +235,7 @@ public:
 
 	void Test() override {
 		drive.GyroReset();
-		//RobotChooser();
+/*		//RobotChooser();
 		float targetAngle = 0.0f;
 		int selectTestAngle = *(AngleChooser.GetSelected());
 					if(selectTestAngle == 0){
@@ -233,12 +246,14 @@ public:
 						targetAngle = 150.0f;
 					}else if(selectTestAngle ==3){
 						targetAngle = 190.0f;
-					}
+					}*/
 
 		while(IsTest() && IsEnabled()){
-			drive.TurnToAngle(targetAngle);
-			Vision::UpdateSmartDashboard();
-			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
+			drive.GyroReset();
+			drive.TurnToAngle(Vision::getAproxAngleToTarget());
+//			drive.TurnToAngle(targetAngle);
+/*			Vision::UpdateSmartDashboard();
+			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());*/
 		}
 	}
 };

@@ -13,7 +13,7 @@
 #define PI 3.14159265
 #define DOGEARDROP
 
-static std::vector<std::vector<cv::Point>>* ContourOutput;
+static std::vector<std::vector<cv::Point>> ContourOutput;
 	static float average_centerx = 0.0f;
 	static float largest_area = 0.0f;
 	static int target_count = 0;
@@ -38,7 +38,7 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 			            	gap.Process(source);
 			            	ContourOutput = gap.GetFilterContoursOutput();
 #ifdef DOGEARDROP
-			            	if(ContourOutput != NULL){
+			            	if(!ContourOutput.empty()){
 			            	VisionTargets();
 			            	}
 #endif
@@ -63,16 +63,15 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 
 	void Vision::VisionTargets(){
 		float sum_centerx = 0.0f;
-		target_count = 0;
+		target_count = ContourOutput.size();
 		largest_area = 0.0f;
 		largest_width = 0.0f;
 
-		for(std::vector<cv::Point> con : *ContourOutput){
-			target_count++;
+		for(std::vector<cv::Point> con : ContourOutput){
 			largest_area = std::max(largest_area, (float)cv::contourArea(con));
 			cv::Rect rect = cv::boundingRect(con);
 			largest_width = std::max(largest_width, (float)rect.width);
-			sum_centerx += sum_centerx + rect.x + rect.width /2;
+			sum_centerx = sum_centerx + rect.x + rect.width /2.0f;
 		}
 
 		if(target_count > 0){

@@ -31,7 +31,11 @@ class ShowStats{
 				Vision::ShowVisionStats();
 			}
 			if(Estick->GetRawButton(ShowStatsPeriodicly_Button_ID) && canpressSSP){
-				periodiclyenable = true;
+				if(periodiclyenable == false){
+					periodiclyenable = true;
+				}else{
+					periodiclyenable = false;
+				}
 				canpressSSP = false;
 			}
 			if(periodiclyenable == true){

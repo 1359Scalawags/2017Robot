@@ -101,8 +101,8 @@ std::vector<std::vector<cv::Point> >* GripAreaPipeline::GetFindContoursOutput(){
  * This method is a generated getter for the output of a Filter_Contours.
  * @return ContoursReport output from Filter_Contours.
  */
-std::vector<std::vector<cv::Point> >* GripAreaPipeline::GetFilterContoursOutput(){
-	return &(this->filterContoursOutput);
+std::vector<std::vector<cv::Point> > GripAreaPipeline::GetFilterContoursOutput(){
+	return (this->filterContoursOutput);
 }
 	/**
 	 * Scales and image to an exact size.
