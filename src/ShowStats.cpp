@@ -2,6 +2,7 @@
 #include "WPILib.h"
 #include <VictorSP.h>
 #include <iostream>
+#include <Vision.h>
 /*
  * ShowStats.cpp
  *
@@ -21,14 +22,12 @@ class ShowStats{
 
 		void DesplayStats(){
 			if(Estick->GetRawButton(ShowStats_Button_ID)){
+				std::cout << "--------------------------------------------\n";
 				std::cout << "Stats:\n";
-				DisplayVisionInfo();
+				Vision::ShowVisionStats();
 			}
 		}
 
-		void DisplayVisionInfo(){
-
-		}
 };
 
 

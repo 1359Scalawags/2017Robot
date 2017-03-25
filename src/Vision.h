@@ -35,6 +35,7 @@ class Vision{
 	static void UpdateSmartDashboard();
 	static float GetAproxamatAngle(int target_center_x, int target_width);
 	static float getAproxAngleToTarget();
+	static void ShowVisionStats();
 };
 
 #endif /* SRC_VISION_H_ */

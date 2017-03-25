@@ -100,5 +100,14 @@ static std::vector<std::vector<cv::Point>>* ContourOutput;
 		SmartDashboard::PutNumber("Number Of Targets", target_count);
 	}
 
+	void Vision::ShowVisionStats(){
+		std::cout << "Vision Info:\n";
+		std::cout << "Average Center X: " << average_centerx << "\n";
+		std::cout << "Largest Area: " << largest_area << "\n";
+		std::cout << "Target Count: " << target_count << "\n";
+		std::cout << "Largest Width: " << largest_width << "\n";
+		std::cout << "Aprox Angle To Target: " << aproxamat_angle_to_target << "\n";
+	}
+
 /*SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());
 			SmartDashboard::PutNumber("TargetCenter:", drive.GetTargetCenterX(*ContourOutput[0].data()));*/
