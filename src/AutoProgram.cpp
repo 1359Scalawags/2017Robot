@@ -89,6 +89,8 @@ public:
 			if(TurnToPeg(RotateAnglePeg)){
 				ChangeState(Stop);
 			}
+		}else{
+			drive->ArcadeDrive(0.0f, 0.0f);
 		}
 	}
 	void AutonRight(){
@@ -104,10 +106,18 @@ public:
 			if(TurnToPeg(RotateAnglePeg)){
 				ChangeState(Stop);
 			}
+		}else{
+			drive->ArcadeDrive(0.0f, 0.0f);
 		}
 	}
 	void AutonMiddle(){
-
+		if(autostate == Driving){
+			if(ForwardFromWall(DriveByTime)){
+				ChangeState(Stop);
+			}else{
+				drive->ArcadeDrive(0.0f, 0.0f);
+			}
+		}
 	}
 
 	void AutoInit(){
@@ -126,7 +136,8 @@ public:
 		if(position == StartingPosition::Middle){
 			//need to move forward 3ft
 			DisFromWall = 36;
-			DriveByTime = 5;
+			DriveByTime = 5.0f;
+			DriveBackByTime = 0.0f;
 			RotateAnglePeg = 0;
 			RotateAngleClear = 90;
 			RotateAngleLine = -90;
@@ -134,14 +145,16 @@ public:
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
-			DriveByTime = 6;
+			DriveByTime = 6.0f;
+			DriveBackByTime = 3.0f;
 			RotateAnglePeg = -120;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}else{
 			//need to move forward 16ft
 			DisFromWall = 192;
-			DriveByTime = 6;
+			DriveByTime = 6.0f;
+			DriveBackByTime = 3.0f;
 			RotateAnglePeg = 120;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
