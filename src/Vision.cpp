@@ -19,6 +19,7 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 	static int target_count = 0;
 	static float largest_width = 0.0f;
 	static float aproxamat_angle_to_target;
+	static float distance_from_target;
 	Vision::Vision(){
 
 	}
@@ -53,7 +54,7 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 
 	float Vision::GetAproxamatAngle(int target_center_x, int target_width){
 		if(target_width != 0){
-			float distance_from_target = 1280.0f / target_width;
+			distance_from_target = 1280.0f / target_width;
 			float center_to_target = distance_from_target * (target_center_x - VisionCenterX) / VisionResolutionX;
 			return atan2(center_to_target, distance_from_target) * 180.0f / PI;
 		}else{
@@ -80,6 +81,10 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 		}else{
 			aproxamat_angle_to_target = 0.0f;
 		}
+	}
+	float Vision::GetDistanceFromTarget(){
+		return std::min(distance_from_target, 1280.0f);
+
 	}
 	float Vision::getLargestArea(){
 		return largest_area;

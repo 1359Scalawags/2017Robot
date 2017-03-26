@@ -56,7 +56,6 @@
 
 	void Drive::GyroReset(){
 		Gyro.Reset();
-		printf("Gyro was just reset!");
 	}
 	void Drive::Safety(){
 		mainDrive.SetSafetyEnabled(true);
@@ -84,6 +83,15 @@
 		float angle = Gyro.GetAngle();
 			if(GetTime() < time){
 				ArcadeDrive(.5f, angle * .5f);
+				return false;
+			}else{
+				ArcadeDrive(0.0f, angle * .5f);
+				return true;
+			}
+	}
+	bool Drive::DriveForwardByAngleByTime(float speed, float angle, float time){
+			if(GetTime() < time){
+				ArcadeDrive(speed, angle * .5f);
 				return false;
 			}else{
 				ArcadeDrive(0.0f, angle * .5f);

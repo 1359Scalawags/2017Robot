@@ -84,6 +84,19 @@ public:
 		visionThread.detach();
 
 		RobotChooser();
+
+		std::cout << " ____________  .________________ \n"
+				  <<"/_   \\_____  \\ |   ____/   __   \\\n"
+				  <<" |   | _(__  < |____  \\\\____    /\n"
+				  <<" |   |/       \\/       \\  /    / \n"
+				  <<" |___/______  /______  / /____/  \n"
+				  <<"            \\/       \\/          \n";
+		std::cout << "  _________             .__                                       \n"
+				  <<" /   _____/ ____ _____  |  | _____ __  _  _______     ____  ______\n"
+				  <<" \\_____  \\_/ ___\\\\__  \\ |  | \\__  \\\\ \\/ \\/ /\\__  \\   / ___\\/  ___/\n"
+				  <<" /        \\  \\___ / __ \\|  |__/ __ \\\\     /  / __ \\_/ /_/  >___ \\ \n"
+				  <<"/_______  /\\___  >____  /____(____  /\\/\\_/  (____  /\\___  /____  >\n"
+				  <<"        \\/     \\/     \\/          \\/             \\//_____/     \\/ \n";
 		//drive.DriveInit();
 
 
@@ -148,12 +161,16 @@ public:
 		int selectFieldPos = *(chooser.GetSelected());
 			if(selectFieldPos == 0){
 				auton.SetFieldPosition(StartingPosition::Left);
+				std::cout << "Autonomous Mode: LEFT\n";
 			}else if(selectFieldPos == 1){
 				auton.SetFieldPosition(StartingPosition::Middle);
+				std::cout << "Autonomous Mode: MIDDLE\n";
 			}else if(selectFieldPos == 2){
 				auton.SetFieldPosition(StartingPosition::Right);
+				std::cout << "Autonomous Mode: RIGHT\n";
 			}else if(selectFieldPos ==3){
 				auton.SetFieldPosition(StartingPosition::Test);
+				std::cout << "Autonomous Mode: A MODE THAT YOU SHOULD NOT BE IN\n";
 			}else{
 
 			}
@@ -167,6 +184,7 @@ public:
 				auton.AutonRight();
 			}
 				//auton.Auton();
+			showstats.DesplayStats();
 			Wait(0.005);
 
 		}
@@ -182,18 +200,6 @@ public:
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
 		std::cout << "Tellop is Enabled\n" << "...\n" << "GO\n";
-		std::cout << " ____________  .________________ \n"
-				<<"/_   \\_____  \\ |   ____/   __   \\\n"
-				<<" |   | _(__  < |____  \\\\____    /\n"
-				<<" |   |/       \\/       \\  /    / \n"
-				<<" |___/______  /______  / /____/  \n"
-				<<"            \\/       \\/          \n";
-		std::cout << "  _________             .__                                       \n"
-				<<" /   _____/ ____ _____  |  | _____ __  _  _______     ____  ______\n"
-				<<" \\_____  \\_/ ___\\\\__  \\ |  | \\__  \\\\ \\/ \\/ /\\__  \\   / ___\\/  ___/\n"
-				<<" /        \\  \\___ / __ \\|  |__/ __ \\\\     /  / __ \\_/ /_/  >___ \\ \n"
-				<<"/_______  /\\___  >____  /____(____  /\\/\\_/  (____  /\\___  /____  >\n"
-				<<"        \\/     \\/     \\/          \\/             \\//_____/     \\/ \n";
 		//RobotChooser();
 		while (IsOperatorControl() && IsEnabled()) {
 			//float angle = Gyro.GetAngle();

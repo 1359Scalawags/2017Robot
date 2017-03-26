@@ -11,6 +11,7 @@
  */
 
 
+
 enum StartingPosition{
 	Left = 0,
 	Middle = 1,
@@ -53,6 +54,9 @@ private:
 	AutonState autostate;
 	AutonMiddleDirection automiddir;
 	float DriveTimeToClearShip;
+	float lastDistanceToPeg;
+	float lastAngleToPeg;
+
 
 	//Functionptr currentprocess;
 
@@ -69,7 +73,9 @@ public:
 		gear(gearhandler),
 		autostate(Driving),
 		automiddir(MidRight),
-		DriveTimeToClearShip(1.5f)
+		DriveTimeToClearShip(1.5f),
+		lastDistanceToPeg(0),
+		lastAngleToPeg(0)
 		//currentprocess()
 {
 
@@ -79,7 +85,7 @@ public:
 	void AutonLeft(){
 		if(autostate == Driving){
 			if(ForwardFromWall(DriveByTime)){
-				ChangeState(Backing);
+				ChangeState(TurningToPeg);
 			}
 		}else if(autostate == Backing){
 			if(Backward(DriveBackByTime)){
@@ -96,7 +102,7 @@ public:
 	void AutonRight(){
 		if(autostate == Driving){
 			if(ForwardFromWall(DriveByTime)){
-				ChangeState(Backing);
+				ChangeState(TurningToPeg);
 			}
 		}else if(autostate == Backing){
 			if(Backward(DriveBackByTime)){
@@ -111,19 +117,23 @@ public:
 		}
 	}
 	void AutonMiddle(){
-		if(autostate == Driving){
-			if(ForwardFromWall(DriveByTime)){
+		if(autostate == TargetPeg){
+			if(TrackPeg(30.0f)){
 				ChangeState(Stop);
-			}else{
-				drive->ArcadeDrive(0.0f, 0.0f);
 			}
+		}else{
+			drive->ArcadeDrive(0.0f, 0.0f);
 		}
 	}
 
 	void AutoInit(){
 		drive->ResetTimer();
-		ChangeState(Driving);
 		drive->InvertDrive(true);
+		if(StartingPosition::Middle){
+			ChangeState(TargetPeg);
+		}else{
+			ChangeState(Driving);
+		}
 		//currentprocess = &AutoProgram::AutonForward;
 	}
 	void ChangeState(AutonState newstate){
@@ -136,7 +146,7 @@ public:
 		if(position == StartingPosition::Middle){
 			//need to move forward 3ft
 			DisFromWall = 36;
-			DriveByTime = 5.0f;
+			DriveByTime = 3.0f;
 			DriveBackByTime = 0.0f;
 			RotateAnglePeg = 0;
 			RotateAngleClear = 90;
@@ -247,9 +257,22 @@ public:
 		return drive->DriveBackwardByTime(Drivetime);
 	}
 
-	void TrackPeg(){ //finds and targets the peg
-		SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
-		ChangeState(AutonState::GearPlacing);
+
+	bool TrackPeg(float BailTime){ //finds and targets the peg
+		float distanceToPeg = (Vision::GetDistanceFromTarget() + lastDistanceToPeg) / 2.0f;
+		lastDistanceToPeg = distanceToPeg;
+		float angleToPeg = (Vision::getAproxAngleToTarget() + lastAngleToPeg) / 2.0f;
+		lastAngleToPeg = angleToPeg;
+		float speed = (distanceToPeg + 320.0f) / 1600.0f;
+		speed = std::min(speed, 1.0f);
+		speed = std::max(speed, 0.2f);
+		drive->GyroReset();
+		if(angleToPeg >= 5 || angleToPeg <= -5){
+			return drive->DriveForwardByAngleByTime(speed / 2.0f, -angleToPeg / 5.0f, BailTime);
+		}else{
+			return drive->DriveForwardByAngleByTime(speed / 2.0f, 0, BailTime);
+		}
+
 	}
 	void PlaceGear(){ //places the gear
 		ChangeState(AutonState::DropGear);
