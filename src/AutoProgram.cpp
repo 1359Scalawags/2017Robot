@@ -261,18 +261,12 @@ public:
 	bool TrackPeg(float BailTime){ //finds and targets the peg
 		float distanceToPeg = (Vision::GetDistanceFromTarget() + lastDistanceToPeg) / 2.0f;
 		lastDistanceToPeg = distanceToPeg;
-		float angleToPeg = (Vision::getAproxAngleToTarget() + lastAngleToPeg) / 2.0f;
-		lastAngleToPeg = angleToPeg;
+		float Heading = (Vision::GetHeadingToTarget(drive->PullGyroAngle()));
 		float speed = (distanceToPeg + 320.0f) / 1600.0f;
 		speed = std::min(speed, 1.0f);
 		speed = std::max(speed, 0.2f);
-		drive->GyroReset();
-		if(angleToPeg >= 5 || angleToPeg <= -5){
-			return drive->DriveForwardByAngleByTime(speed / 2.0f, -angleToPeg / 5.0f, BailTime);
-		}else{
-			return drive->DriveForwardByAngleByTime(speed / 2.0f, 0, BailTime);
-		}
-
+		std::cout << Heading << "\n";
+		return drive->DriveForwardToHeadingByTime(speed / 2.0f, Heading, BailTime);
 	}
 	void PlaceGear(){ //places the gear
 		ChangeState(AutonState::DropGear);

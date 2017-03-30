@@ -4,6 +4,7 @@
 #include <cmath>
 #include <GripAreaPipeline.h>
 #include <Vision.h>
+#include <Averager.h>
 /*
  * Vision.cpp
  *
@@ -18,7 +19,7 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 	static float largest_area = 0.0f;
 	static int target_count = 0;
 	static float largest_width = 0.0f;
-	static float aproxamat_angle_to_target;
+	static Averager aproxamat_angle_to_target(3, 10, 0);
 	static float distance_from_target;
 	Vision::Vision(){
 
@@ -39,22 +40,22 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 			            	gap.Process(source);
 			            	ContourOutput = gap.GetFilterContoursOutput();
 #ifdef DOGEARDROP
-			            	if(!ContourOutput.empty()){
+
 			            	VisionTargets();
-			            	}
+
 #endif
 			            }
 
 			            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
 			            //outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
-			            Wait(0.05);
+			            Wait(0.2);
 			        }
 
 		}
 
 	float Vision::GetAproxamatAngle(int target_center_x, int target_width){
 		if(target_width != 0){
-			distance_from_target = 1280.0f / target_width;
+			distance_from_target = 640.0f / target_width;
 			float center_to_target = distance_from_target * (target_center_x - VisionCenterX) / VisionResolutionX;
 			return atan2(center_to_target, distance_from_target) * 180.0f / PI;
 		}else{
@@ -77,9 +78,9 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 
 		if(target_count > 0){
 			average_centerx = sum_centerx / target_count;
-			aproxamat_angle_to_target = GetAproxamatAngle(average_centerx, largest_width);
+			aproxamat_angle_to_target.addValue(GetAproxamatAngle(average_centerx, largest_width));
 		}else{
-			aproxamat_angle_to_target = 0.0f;
+			aproxamat_angle_to_target.addValue(0.0f);
 		}
 	}
 	float Vision::GetDistanceFromTarget(){
@@ -96,7 +97,11 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 		return target_count;
 	}
 	float Vision::getAproxAngleToTarget(){
-		return aproxamat_angle_to_target;
+		return aproxamat_angle_to_target.getCurrentAverage();
+	}
+	float Vision::GetHeadingToTarget(float currentHeading){
+
+		return currentHeading + aproxamat_angle_to_target.getCurrentAverage();
 	}
 	void Vision::UpdateSmartDashboard(){
 		SmartDashboard::PutNumber("Largest Target", largest_area);
@@ -111,7 +116,8 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 		std::cout << "Largest Area: " << largest_area << "\n";
 		std::cout << "Target Count: " << target_count << "\n";
 		std::cout << "Largest Width: " << largest_width << "\n";
-		std::cout << "Aprox Angle To Target: " << aproxamat_angle_to_target << "\n";
+		std::cout << "Heading To Target: " << aproxamat_angle_to_target.getCurrentAverage() << "\n";
+		std::cout << "Distance To Peg: " << GetDistanceFromTarget() << "\n";
 	}
 
 /*SmartDashboard::PutNumber("VisionThreadContourSize", ContourOutput->size());

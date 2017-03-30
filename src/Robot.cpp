@@ -115,8 +115,8 @@ public:
 	}
 
 	void RobotChooser(){
-		chooser.AddObject("Middle", &middle);
-		chooser.AddDefault("Left", &left);
+		chooser.AddDefault("Middle", &middle);
+		chooser.AddObject("Left", &left);
 		chooser.AddObject("Right", &right);
 		chooser.AddObject("Test", &test);
 		SmartDashboard::PutData("AutonModes", &chooser);
@@ -211,7 +211,7 @@ public:
 			handler.TeleOp();
 			climber.TeleOp();
 			showstats.DesplayStats();
-			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());
+			SmartDashboard::PutNumber("Heading to target", Vision::GetHeadingToTarget(drive.PullGyroAngle()));
 			//int large_angle = (int)(angle * 1000);
 			//angle = (large_angle % 360000) / 1000.0f;
 			//SmartDashboard::PutNumber("GYRO", angle);
@@ -255,8 +255,7 @@ public:
 					}*/
 
 		while(IsTest() && IsEnabled()){
-			drive.GyroReset();
-			drive.TurnToAngle(Vision::getAproxAngleToTarget());
+			drive.TurnToAngle(Vision::GetHeadingToTarget(drive.PullGyroAngle()));
 //			drive.TurnToAngle(targetAngle);
 /*			Vision::UpdateSmartDashboard();
 			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());*/

@@ -98,6 +98,16 @@
 				return true;
 			}
 	}
+	bool Drive::DriveForwardToHeadingByTime(float speed, float Heading, float time){
+		float head = NormalizeAngle(PullGyroAngle() - Heading);
+			if(GetTime() < time){
+				ArcadeDrive(speed, head);
+				return false;
+			}else{
+				ArcadeDrive(0.0f, head);
+				return true;
+			}
+	}
 	bool Drive::DriveBackwardByTime(float time){
 			//float angle = Gyro.GetAngle();
 			float angle = 0.0f;
