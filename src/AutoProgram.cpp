@@ -262,9 +262,9 @@ public:
 		float distanceToPeg = (Vision::GetDistanceFromTarget() + lastDistanceToPeg) / 2.0f;
 		lastDistanceToPeg = distanceToPeg;
 		float Heading = (Vision::GetHeadingToTarget(drive->PullGyroAngle()));
-		float speed = (distanceToPeg + 320.0f) / 1600.0f;
-		speed = std::min(speed, 1.0f);
-		speed = std::max(speed, 0.2f);
+		float speed = (distanceToPeg + 100.0f) / 200.0f;
+		speed = std::min(speed, 0.6f);
+		speed = std::max(speed, 0.3f);
 		std::cout << Heading << "\n";
 		return drive->DriveForwardToHeadingByTime(speed / 2.0f, Heading, BailTime);
 	}

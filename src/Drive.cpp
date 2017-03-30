@@ -101,10 +101,10 @@
 	bool Drive::DriveForwardToHeadingByTime(float speed, float Heading, float time){
 		float head = NormalizeAngle(PullGyroAngle() - Heading);
 			if(GetTime() < time){
-				ArcadeDrive(speed, head);
+				ArcadeDrive(speed, head * .25);
 				return false;
 			}else{
-				ArcadeDrive(0.0f, head);
+				ArcadeDrive(0.0f, head * .25);
 				return true;
 			}
 	}
