@@ -64,10 +64,11 @@ public:
 	bool TurnToAngle(float targetAngle);
 	void TankDrive(float target_left, float target_right);
 	void ArcadeDrive(float target_speed, float rotate_speed);
-	bool DriveForwardByTime(float time);
+	bool DriveForwardByTime(float speed, float time);
 	bool DriveForwardByAngleByTime(float time, float angle, float speed);
 	bool DriveForwardToHeadingByTime(float time, float angle, float speed);
-	bool DriveBackwardByTime(float time);
+	bool DriveBackwardByTime(float speed, float time);
+	bool Pause(float time);
 	float PullGyroAngle();
 	float NormalizeAngle(float angle);
 	void DriveAssist();

@@ -157,6 +157,7 @@ public:
 
 	void Autonomous() override {
 		drive.Safety();
+		Vision::SetUseVision(true);
 		//RobotChooser();
 		int selectFieldPos = *(chooser.GetSelected());
 			if(selectFieldPos == 0){
@@ -196,6 +197,7 @@ public:
 
 	void OperatorControl() override {
 //		mainDrive.SetSafetyEnabled(true);
+		Vision::SetUseVision(false);
 		drive.Safety();
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
@@ -241,6 +243,7 @@ public:
 
 	void Test() override {
 		drive.GyroReset();
+		Vision::SetUseVision(true);
 /*		//RobotChooser();
 		float targetAngle = 0.0f;
 		int selectTestAngle = *(AngleChooser.GetSelected());
@@ -253,9 +256,16 @@ public:
 					}else if(selectTestAngle ==3){
 						targetAngle = 190.0f;
 					}*/
-
+		int counter = 0;
 		while(IsTest() && IsEnabled()){
 			drive.TurnToAngle(Vision::GetHeadingToTarget(drive.PullGyroAngle()));
+			if(counter >= 20){
+				Vision::ShowVisionStats();
+				counter = 0;
+			}else{
+				counter++;
+			}
+
 //			drive.TurnToAngle(targetAngle);
 /*			Vision::UpdateSmartDashboard();
 			SmartDashboard::PutNumber("Angle to target", Vision::getAproxAngleToTarget());*/

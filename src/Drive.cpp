@@ -79,13 +79,22 @@
 		SmartDashboard::PutNumber("Sonar", Sonar.GetAverageValue());
 	}
 
-	bool Drive::DriveForwardByTime(float time){
+	bool Drive::DriveForwardByTime(float speed, float time){
 		float angle = Gyro.GetAngle();
 			if(GetTime() < time){
-				ArcadeDrive(.5f, angle * .5f);
+				ArcadeDrive(speed, angle * .5f);
 				return false;
 			}else{
 				ArcadeDrive(0.0f, angle * .5f);
+				return true;
+			}
+	}
+	bool Drive::Pause(float time){
+			if(GetTime() < time){
+				ArcadeDrive(0.0f, 0.0f);
+				return false;
+			}else{
+				ArcadeDrive(0.0f, 0.0f);
 				return true;
 			}
 	}
@@ -99,20 +108,20 @@
 			}
 	}
 	bool Drive::DriveForwardToHeadingByTime(float speed, float Heading, float time){
-		float head = NormalizeAngle(PullGyroAngle() - Heading);
+		float head = -NormalizeAngle(Heading - PullGyroAngle());
 			if(GetTime() < time){
-				ArcadeDrive(speed, head * .25);
+				ArcadeDrive(speed, head * .1);
 				return false;
 			}else{
-				ArcadeDrive(0.0f, head * .25);
+				ArcadeDrive(0.0f, head * .1);
 				return true;
 			}
 	}
-	bool Drive::DriveBackwardByTime(float time){
+	bool Drive::DriveBackwardByTime(float speed, float time){
 			//float angle = Gyro.GetAngle();
 			float angle = 0.0f;
 				if(GetTime() < time){
-					ArcadeDrive(-.5f, -angle * .5f);
+					ArcadeDrive(-speed, -angle * .5f);
 					return false;
 				}else{
 					ArcadeDrive(-0.0f, -angle * .5f);
@@ -121,8 +130,8 @@
 		}
 
 	bool Drive::TurnToAngle(float targetAngle){
-		float angle = NormalizeAngle(PullGyroAngle() - targetAngle);
-		ArcadeDrive(0.0f, std::max(-0.5, std::min(0.5, 0.025 * -angle)));
+		float angle = -NormalizeAngle(targetAngle - PullGyroAngle());
+		ArcadeDrive(0.0f, angle * 0.25f);
 		if(abs(angle) < ROTATE_TOLERANCE && abs(Gyro.GetRate()) < 5){
 			return true;
 		}else{

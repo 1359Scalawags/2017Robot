@@ -18,9 +18,10 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 	static float average_centerx = 0.0f;
 	static float largest_area = 0.0f;
 	static int target_count = 0;
-	static float largest_width = 0.0f;
-	static Averager aproxamat_angle_to_target(3, 10, 0);
+	static float largest_hight = 0.0f;
+	static Averager aproxamat_angle_to_target(2, 5, 0);
 	static float distance_from_target;
+	static bool UseVision;
 	Vision::Vision(){
 
 	}
@@ -33,52 +34,58 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 			        cv::Mat source;
 			        cv::Mat output;
 			        while(true) {
-			            cvSink.GrabFrame(source);
-			            if(source.empty()){
-			            	continue;
-			            }else{
-			            	gap.Process(source);
-			            	ContourOutput = gap.GetFilterContoursOutput();
+			        	if(UseVision){
+			        		cvSink.GrabFrame(source);
+			        		if(source.empty()){
+			        			continue;
+			        		}else{
+			        			gap.Process(source);
+			        			ContourOutput = gap.GetFilterContoursOutput();
 #ifdef DOGEARDROP
 
-			            	VisionTargets();
+			        			VisionTargets();
 
 #endif
-			            }
+			        		}
 
-			            //cvtColor(source, output, cv::COLOR_BGR2GRAY);
-			            //outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
-			            Wait(0.2);
+			        		//cvtColor(source, output, cv::COLOR_BGR2GRAY);
+			        		//outputStreamStd.PutFrame(*gap.GetHslThresholdOutput());
+			        		Wait(0.1);
+			        	}
 			        }
 
 		}
 
-	float Vision::GetAproxamatAngle(int target_center_x, int target_width){
-		if(target_width != 0){
-			distance_from_target = 640.0f / target_width;
+	float Vision::GetAproxamatAngle(int target_center_x, int target_hight){
+		if(target_hight != 0){
+			distance_from_target = 640.0f / (target_hight / 2.5);
 			float center_to_target = distance_from_target * (target_center_x - VisionCenterX) / VisionResolutionX;
-			return atan2(center_to_target, distance_from_target) * 180.0f / PI;
+			return (atan2(center_to_target, distance_from_target) * 180.0f / PI) / 3.0f;
 		}else{
 			return 0.0f;
 		}
+	}
+
+	void Vision::SetUseVision(bool setvision){
+		UseVision = setvision;
 	}
 
 	void Vision::VisionTargets(){
 		float sum_centerx = 0.0f;
 		target_count = ContourOutput.size();
 		largest_area = 0.0f;
-		largest_width = 0.0f;
+		largest_hight = 0.0f;
 
 		for(std::vector<cv::Point> con : ContourOutput){
 			largest_area = std::max(largest_area, (float)cv::contourArea(con));
 			cv::Rect rect = cv::boundingRect(con);
-			largest_width = std::max(largest_width, (float)rect.width);
-			sum_centerx = sum_centerx + rect.x + rect.width /2.0f;
+			largest_hight = std::max(largest_hight, (float)rect.height);
+			sum_centerx = sum_centerx + rect.x + rect.height /2.0f;
 		}
 
 		if(target_count > 0){
 			average_centerx = sum_centerx / target_count;
-			aproxamat_angle_to_target.addValue(GetAproxamatAngle(average_centerx, largest_width));
+			aproxamat_angle_to_target.addValue(GetAproxamatAngle(average_centerx, largest_hight));
 		}else{
 			aproxamat_angle_to_target.addValue(0.0f);
 		}
@@ -115,7 +122,7 @@ static std::vector<std::vector<cv::Point>> ContourOutput;
 		std::cout << "Average Center X: " << average_centerx << "\n";
 		std::cout << "Largest Area: " << largest_area << "\n";
 		std::cout << "Target Count: " << target_count << "\n";
-		std::cout << "Largest Width: " << largest_width << "\n";
+		std::cout << "Largest hight: " << largest_hight << "\n";
 		std::cout << "Heading To Target: " << aproxamat_angle_to_target.getCurrentAverage() << "\n";
 		std::cout << "Distance To Peg: " << GetDistanceFromTarget() << "\n";
 	}

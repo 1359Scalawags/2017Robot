@@ -34,6 +34,7 @@ class Vision{
 	Vision();
 	static void VisionThread();
 	static int GetTargetNumber();
+	static void SetUseVision(bool setvision);
 	static void UpdateSmartDashboard();
 	static float GetHeadingToTarget(float currentHeading);
 	static void ShowVisionStats();

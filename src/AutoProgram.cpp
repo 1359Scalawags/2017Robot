@@ -13,10 +13,10 @@
 
 
 enum StartingPosition{
-	Left = 0,
-	Middle = 1,
-	Right = 2,
-	Test = 3
+	Left,
+	Middle,
+	Right,
+	Test
 };
 enum AutonState{
 	Driving,
@@ -29,7 +29,8 @@ enum AutonState{
 	DriveToClear,
 	TurnToLine,
 	DriveToLine,
-	Stop
+	Stop,
+	Pause
 };
 enum AutonMiddleDirection{
 	MidLeft,
@@ -84,15 +85,28 @@ public:
 
 	void AutonLeft(){
 		if(autostate == Driving){
-			if(ForwardFromWall(DriveByTime)){
-				ChangeState(TurningToPeg);
+			std::cout << "Driving\n";
+			if(ForwardFromWall(0.6f, DriveByTime)){
+				ChangeState(Pause);
 			}
-		}else if(autostate == Backing){
-			if(Backward(DriveBackByTime)){
-				ChangeState(TurningToPeg);
+		}else if(autostate == Pause){
+			std::cout << "Pause\n";
+			if(drive->Pause(2.0f)){
+				ChangeState(TargetPeg);
 			}
 		}else if(autostate == TurningToPeg){
+			std::cout << "Turn to peg\n";
 			if(TurnToPeg(RotateAnglePeg)){
+				ChangeState(TargetPeg);
+			}
+		}else if(autostate == TargetPeg){
+			std::cout << "TargetPeg\n";
+			if(TrackPeg(4.0f)){
+				ChangeState(Backing);
+			}
+		}else if(autostate == Backing){
+			std::cout << "Backing\n";
+			if(Backward(0.3f, DriveBackByTime)){
 				ChangeState(Stop);
 			}
 		}else{
@@ -101,15 +115,19 @@ public:
 	}
 	void AutonRight(){
 		if(autostate == Driving){
-			if(ForwardFromWall(DriveByTime)){
-				ChangeState(TurningToPeg);
-			}
-		}else if(autostate == Backing){
-			if(Backward(DriveBackByTime)){
+			if(ForwardFromWall(0.6f, DriveByTime)){
 				ChangeState(TurningToPeg);
 			}
 		}else if(autostate == TurningToPeg){
 			if(TurnToPeg(RotateAnglePeg)){
+				ChangeState(TargetPeg);
+			}
+		}else if(autostate == TargetPeg){
+			if(TrackPeg(4.0f)){
+				ChangeState(Backing);
+			}
+		}else if(autostate == Backing){
+			if(Backward(0.3f, DriveBackByTime)){
 				ChangeState(Stop);
 			}
 		}else{
@@ -117,8 +135,16 @@ public:
 		}
 	}
 	void AutonMiddle(){
-		if(autostate == TargetPeg){
-			if(TrackPeg(30.0f)){
+		if(autostate == Driving){
+			if(ForwardFromWall(0.5f, 1.0f)){
+				ChangeState(TargetPeg);
+			}
+		}else if(autostate == TargetPeg){
+			if(TrackPeg(4.0f)){
+				ChangeState(Backing);
+			}
+		}else if(autostate == Backing){
+			if(Backward(0.3f, DriveBackByTime)){
 				ChangeState(Stop);
 			}
 		}else{
@@ -130,7 +156,7 @@ public:
 		drive->ResetTimer();
 		drive->InvertDrive(true);
 		if(StartingPosition::Middle){
-			ChangeState(TargetPeg);
+			ChangeState(Driving);
 		}else{
 			ChangeState(Driving);
 		}
@@ -147,7 +173,7 @@ public:
 			//need to move forward 3ft
 			DisFromWall = 36;
 			DriveByTime = 3.0f;
-			DriveBackByTime = 0.0f;
+			DriveBackByTime = .7f;
 			RotateAnglePeg = 0;
 			RotateAngleClear = 90;
 			RotateAngleLine = -90;
@@ -155,17 +181,17 @@ public:
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
-			DriveByTime = 6.0f;
+			DriveByTime = 1.0f;
 			DriveBackByTime = 3.0f;
-			RotateAnglePeg = -120;
+			RotateAnglePeg = 60;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}else{
 			//need to move forward 16ft
 			DisFromWall = 192;
-			DriveByTime = 6.0f;
+			DriveByTime = 1.0f;
 			DriveBackByTime = 3.0f;
-			RotateAnglePeg = 120;
+			RotateAnglePeg = -60;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}
@@ -240,21 +266,21 @@ public:
 		}
 	}*/
 
-	bool ForwardFromWall(float Drivetime){ //Drives robot away from wall
-		return drive->DriveForwardByTime(Drivetime);
+	bool ForwardFromWall(float speed, float Drivetime){ //Drives robot away from wall
+		return drive->DriveForwardByTime(speed, Drivetime);
 	}
 	void BackwardFromShip(){ //drives away from ship
 		//if(drive->DriveToDistance(DisFromWall)){
 		//go to next phase
-		if(drive->DriveBackwardByTime(1.0f)){
+		if(drive->DriveBackwardByTime(0.3f, 1.0f)){
 			//currentprocess = &AutoProgram::Rotate;
 			ChangeState(AutonState::TurnToClear);
 		}else{
 
 		}
 	}
-	bool Backward(float Drivetime){ //drives away from ship
-		return drive->DriveBackwardByTime(Drivetime);
+	bool Backward(float speed, float Drivetime){ //drives away from ship
+		return drive->DriveBackwardByTime(speed, Drivetime);
 	}
 
 
@@ -263,10 +289,10 @@ public:
 		lastDistanceToPeg = distanceToPeg;
 		float Heading = (Vision::GetHeadingToTarget(drive->PullGyroAngle()));
 		float speed = (distanceToPeg + 100.0f) / 200.0f;
-		speed = std::min(speed, 0.6f);
-		speed = std::max(speed, 0.3f);
-		std::cout << Heading << "\n";
-		return drive->DriveForwardToHeadingByTime(speed / 2.0f, Heading, BailTime);
+		speed = std::min(speed, 0.5f);
+		speed = std::max(speed, 0.25f);
+		//std::cout << Heading << "\n";
+		return drive->DriveForwardToHeadingByTime(speed, Heading, BailTime);
 	}
 	void PlaceGear(){ //places the gear
 		ChangeState(AutonState::DropGear);
@@ -287,7 +313,7 @@ public:
 	}
 	void DriveClear(){ //drives robot to clear the ship
 #ifdef DEBUG
-		if(drive->DriveForwardByTime(DriveTimeToClearShip)){
+		if(drive->DriveForwardByTime(0.5, DriveTimeToClearShip)){
 #else
 		if(drive->DriveToDistance()){
 #endif
@@ -302,7 +328,7 @@ public:
 	}
 	void DriveLine(){ //drives across the field line
 #ifdef DEBUG
-		if(drive->DriveForwardByTime(1.5f)){
+		if(drive->DriveForwardByTime(0.5f, 1.5f)){
 #else
 		if(drive->DriveToDistance()){
 #endif
