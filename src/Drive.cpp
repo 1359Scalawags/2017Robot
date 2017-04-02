@@ -85,7 +85,7 @@
 				ArcadeDrive(speed, angle * .5f);
 				return false;
 			}else{
-				ArcadeDrive(0.0f, angle * .5f);
+				ArcadeDrive(0.0f, 0.0f);  //TH: this was still turning the bot
 				return true;
 			}
 	}
@@ -103,17 +103,17 @@
 				ArcadeDrive(speed, angle * .5f);
 				return false;
 			}else{
-				ArcadeDrive(0.0f, angle * .5f);
+				ArcadeDrive(0.0f, 0.0f);  //TH: this was still turning the bot
 				return true;
 			}
 	}
 	bool Drive::DriveForwardToHeadingByTime(float speed, float Heading, float time){
 		float head = -NormalizeAngle(Heading - PullGyroAngle());
 			if(GetTime() < time){
-				ArcadeDrive(speed, head * .1);
+				ArcadeDrive(speed, head * .25);
 				return false;
 			}else{
-				ArcadeDrive(0.0f, head * .1);
+				ArcadeDrive(0.0f, 0.0f);  //TH: this was still turning the bot
 				return true;
 			}
 	}
@@ -124,14 +124,14 @@
 					ArcadeDrive(-speed, -angle * .5f);
 					return false;
 				}else{
-					ArcadeDrive(-0.0f, -angle * .5f);
+					ArcadeDrive(0.0f, 0.0f);  //TH: this was still turning the bot
 					return true;
 				}
 		}
 
 	bool Drive::TurnToAngle(float targetAngle){
 		float angle = -NormalizeAngle(targetAngle - PullGyroAngle());
-		ArcadeDrive(0.0f, angle * 0.25f);
+		ArcadeDrive(0.0f, angle * 0.05f);
 		if(abs(angle) < ROTATE_TOLERANCE && abs(Gyro.GetRate()) < 5){
 			return true;
 		}else{
@@ -166,7 +166,8 @@
 		if(rotate_speed == 0){
 			last_rotate_speed = 0;
 		}else{
-			last_rotate_speed = (rotate_speed + last_rotate_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
+			//last_rotate_speed = (rotate_speed + last_rotate_speed * AVERAGE_WEIGHT) / (AVERAGE_WEIGHT + 1);
+			last_rotate_speed = rotate_speed;
 		}
 		mainDrive.ArcadeDrive(last_arcade_speed, last_rotate_speed);
 	}

@@ -10,7 +10,9 @@
  *      Author: Destin
  */
 
-
+// April 01, 2017 - Tim Helland
+// Commented out unused code
+// Removed commented code not used for an extended period
 
 enum StartingPosition{
 	Left,
@@ -32,17 +34,14 @@ enum AutonState{
 	Stop,
 	Pause
 };
-enum AutonMiddleDirection{
+/*enum AutonMiddleDirection{
 	MidLeft,
 	MidRight
-};
+};*/
 
 class AutoProgram{
 
-//typedef void (AutoProgram::*Functionptr)();
-
 private:
-
 	StartingPosition position;
 	float DisFromWall;
 	float RotateAnglePeg;
@@ -53,17 +52,14 @@ private:
 	Drive *drive;
 	GearHandler *gear;
 	AutonState autostate;
-	AutonMiddleDirection automiddir;
+	//AutonMiddleDirection automiddir;
 	float DriveTimeToClearShip;
 	float lastDistanceToPeg;
 	float lastAngleToPeg;
 
-
-	//Functionptr currentprocess;
-
 public:
 	AutoProgram(Drive *maindrive, GearHandler *gearhandler):
-		position(Middle),
+		position(StartingPosition::Middle),
 		DisFromWall(0),
 		RotateAnglePeg(0),
 		RotateAngleLine(0),
@@ -73,60 +69,37 @@ public:
 		drive(maindrive),
 		gear(gearhandler),
 		autostate(Driving),
-		automiddir(MidRight),
+		//automiddir(MidRight),
 		DriveTimeToClearShip(1.5f),
 		lastDistanceToPeg(0),
 		lastAngleToPeg(0)
-		//currentprocess()
-{
+	{
 
-
-}
+	}
 
 	void AutonLeft(){
-		if(autostate == Driving){
-			std::cout << "Driving\n";
-			if(ForwardFromWall(0.6f, DriveByTime)){
-				ChangeState(Pause);
-			}
-		}else if(autostate == Pause){
-			std::cout << "Pause\n";
-			if(drive->Pause(2.0f)){
-				ChangeState(TargetPeg);
-			}
-		}else if(autostate == TurningToPeg){
-			std::cout << "Turn to peg\n";
-			if(TurnToPeg(RotateAnglePeg)){
-				ChangeState(TargetPeg);
-			}
-		}else if(autostate == TargetPeg){
-			std::cout << "TargetPeg\n";
-			if(TrackPeg(4.0f)){
-				ChangeState(Backing);
-			}
-		}else if(autostate == Backing){
-			std::cout << "Backing\n";
-			if(Backward(0.3f, DriveBackByTime)){
-				ChangeState(Stop);
-			}
-		}else{
-			drive->ArcadeDrive(0.0f, 0.0f);
-		}
-	}
-	void AutonRight(){
+		// TH: Reverted the code to not have a pause in it
 		if(autostate == Driving){
 			if(ForwardFromWall(0.6f, DriveByTime)){
 				ChangeState(TurningToPeg);
 			}
+		}else if(autostate == Pause){
+			//std::cout << "Pause\n";
+			if(drive->Pause(2.0f)){
+				ChangeState(TurningToPeg); // TH: changed this to TurningToPeg
+			}
 		}else if(autostate == TurningToPeg){
+			//std::cout << "Turn to peg\n";
 			if(TurnToPeg(RotateAnglePeg)){
 				ChangeState(TargetPeg);
 			}
 		}else if(autostate == TargetPeg){
-			if(TrackPeg(4.0f)){
+			//std::cout << "TargetPeg\n";
+			if(TrackPeg(5.0f)){
 				ChangeState(Backing);
 			}
 		}else if(autostate == Backing){
+			//std::cout << "Backing\n";
 			if(Backward(0.3f, DriveBackByTime)){
 				ChangeState(Stop);
 			}
@@ -134,6 +107,37 @@ public:
 			drive->ArcadeDrive(0.0f, 0.0f);
 		}
 	}
+
+	void AutonRight(){
+		if(autostate == Driving){
+					if(ForwardFromWall(0.6f, DriveByTime)){
+						ChangeState(TurningToPeg);
+					}
+				}else if(autostate == Pause){
+					//std::cout << "Pause\n";
+					if(drive->Pause(2.0f)){
+						ChangeState(TurningToPeg); // TH: changed this to TurningToPeg
+					}
+				}else if(autostate == TurningToPeg){
+					//std::cout << "Turn to peg\n";
+					if(TurnToPeg(RotateAnglePeg)){
+						ChangeState(TargetPeg);
+					}
+				}else if(autostate == TargetPeg){
+					//std::cout << "TargetPeg\n";
+					if(TrackPeg(5.0f)){
+						ChangeState(Backing);
+					}
+				}else if(autostate == Backing){
+					//std::cout << "Backing\n";
+					if(Backward(0.3f, DriveBackByTime)){
+						ChangeState(Stop);
+					}
+				}else{
+					drive->ArcadeDrive(0.0f, 0.0f);
+				}
+	}
+
 	void AutonMiddle(){
 		if(autostate == Driving){
 			if(ForwardFromWall(0.5f, 1.0f)){
@@ -155,17 +159,18 @@ public:
 	void AutoInit(){
 		drive->ResetTimer();
 		drive->InvertDrive(true);
-		if(StartingPosition::Middle){
+		if(this->position == StartingPosition::Middle){
 			ChangeState(Driving);
 		}else{
 			ChangeState(Driving);
 		}
-		//currentprocess = &AutoProgram::AutonForward;
 	}
+
 	void ChangeState(AutonState newstate){
 		drive->ResetTimer();
 		autostate = newstate;
 	}
+
 	void SetFieldPosition(StartingPosition field_position){
 		drive->GyroReset();
 		position = field_position;
@@ -181,104 +186,30 @@ public:
 		}else if(position == StartingPosition::Left){
 			//need to move froward 16ft
 			DisFromWall = 192;
-			DriveByTime = 1.0f;
-			DriveBackByTime = 3.0f;
+			DriveByTime = 1.5f;
+			DriveBackByTime = .7f;  //adjusted to match Middle
 			RotateAnglePeg = 60;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}else{
 			//need to move forward 16ft
 			DisFromWall = 192;
-			DriveByTime = 1.0f;
-			DriveBackByTime = 3.0f;
+			DriveByTime = 1.5f;
+			DriveBackByTime = .7f;  //adjusted to match Middle
 			RotateAnglePeg = -60;
 			RotateAngleClear = 0;
 			RotateAngleLine = -60;
 		}
 	}
-	void Auton(){
-
-		if(autostate == Driving) {
-			//ForwardFromWall();
-		}else if(autostate == Backing){
-			//Backward();
-		}else if(autostate == TurningToPeg){
-			TurnToPeg(-120);
-
-/*
-		}
-#ifdef DOGEARDROP
-		else if(autostate == TurningToPeg){
-			TurnToPeg(RotateAnglePeg);
-		}else if(autostate == TargetPeg){
-			TrackPeg();
-		}else if(autostate == GearPlacing){
-			PlaceGear();
-		}else if(autostate == DropGear){
-			DropingGear();
-		}else if(autostate == Backing){
-			BackwardFromShip();
-		}
-#else
-		else if(autostate == TurningToPeg || autostate == TargetPeg){
-			ChangeState(TurnToClear);
-		}
-#endif
-		else if(autostate == TurnToClear){
-			TurnClear(RotateAngleClear);
-		}else if(autostate == DriveToClear){
-			DriveClear();
-		}else if(autostate == TurnToLine){
-			TurnLine(RotateAngleLine);
-		}else if(autostate == DriveToLine){
-			DriveLine();
-*/
-		}else{
-			drive->ArcadeDrive(0.0f, 0.0f);
-		}
-		/*if(position == Middle){
-			//(this->*currentprocess)();
-			//drive->DriveStraight(1.5f);
-			AutonMiddle();
-		}else if(position == Left){
-			AutonLeft();
-		}else if(position == Right){
-			AutonRight();
-		}else if(position == Test){
-
-		}*/
-	}
-
-/*	void AutonLeft(){
-		drive->TurnToAngle(90);
-	}
-	void AutonRight(){
-		drive->TurnToAngle(-90);
-	}*/
 
 	bool TurnToPeg(float angle){ //rotates robot to face peg
 		return drive->TurnToAngle(angle);
 	}
 
-/*	void AutonMiddle(){
-		if(autostate == Driving){
-			ForwardFromWall();
-		}
-	}*/
-
 	bool ForwardFromWall(float speed, float Drivetime){ //Drives robot away from wall
 		return drive->DriveForwardByTime(speed, Drivetime);
 	}
-	void BackwardFromShip(){ //drives away from ship
-		//if(drive->DriveToDistance(DisFromWall)){
-		//go to next phase
-		if(drive->DriveBackwardByTime(0.3f, 1.0f)){
-			//currentprocess = &AutoProgram::Rotate;
-			ChangeState(AutonState::TurnToClear);
-		}else{
 
-		}
-	}
 	bool Backward(float speed, float Drivetime){ //drives away from ship
 		return drive->DriveBackwardByTime(speed, Drivetime);
 	}
@@ -289,19 +220,19 @@ public:
 		lastDistanceToPeg = distanceToPeg;
 		float Heading = (Vision::GetHeadingToTarget(drive->PullGyroAngle()));
 		float speed = (distanceToPeg + 100.0f) / 200.0f;
-		speed = std::min(speed, 0.5f);
+		speed = std::min(speed, 0.4f);
 		speed = std::max(speed, 0.25f);
 		//std::cout << Heading << "\n";
 		return drive->DriveForwardToHeadingByTime(speed, Heading, BailTime);
 	}
-	void PlaceGear(){ //places the gear
+/*	void PlaceGear(){ //places the gear
 		ChangeState(AutonState::DropGear);
 	}
 	void DropingGear(){//drops the gear
 		gear->OpenDoor();
 		ChangeState(AutonState::Backing);
-	}
-	void TurnClear(float angle){ //rotates robot to clear the ship
+	}*/
+/*	void TurnClear(float angle){ //rotates robot to clear the ship
 		if(drive->TurnToAngle(angle)){
 			if(position == Middle){
 				ChangeState(AutonState::DriveToClear);
@@ -310,8 +241,8 @@ public:
 			}
 
 		}
-	}
-	void DriveClear(){ //drives robot to clear the ship
+	}*/
+/*	void DriveClear(){ //drives robot to clear the ship
 #ifdef DEBUG
 		if(drive->DriveForwardByTime(0.5, DriveTimeToClearShip)){
 #else
@@ -320,13 +251,13 @@ public:
 
 			ChangeState(AutonState::TurnToLine);
 		}
-	}
-	void TurnLine(float angle){ //turns to face the field line
+	}*/
+/*	void TurnLine(float angle){ //turns to face the field line
 		if(drive->TurnToAngle(angle)){
 			autostate = AutonState::DriveToLine;
 		}
-	}
-	void DriveLine(){ //drives across the field line
+	}*/
+/*	void DriveLine(){ //drives across the field line
 #ifdef DEBUG
 		if(drive->DriveForwardByTime(0.5f, 1.5f)){
 #else
@@ -335,7 +266,17 @@ public:
 
 			ChangeState(AutonState::Stop);
 		}
-	}
+	}*/
+/*	void BackwardFromShip(){ //drives away from ship
+		//if(drive->DriveToDistance(DisFromWall)){
+		//go to next phase
+		if(drive->DriveBackwardByTime(0.3f, 1.0f)){
+			//currentprocess = &AutoProgram::Rotate;
+			ChangeState(AutonState::TurnToClear);
+		}else{
+
+		}
+	}*/
 };
 
 

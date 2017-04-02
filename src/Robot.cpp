@@ -14,7 +14,10 @@
 #include <ShowStats.cpp>
 //#include <FuelHopper.cpp>
 
-//Test for Vision Branch
+// April 01, 2017 - Tim Helland
+// Commented out unused code
+// Removed commented code not used for an extended period
+
 
 
 class Robot: public frc::SampleRobot {
@@ -32,10 +35,6 @@ class Robot: public frc::SampleRobot {
 	int middle = 1;
 	int right = 2;
 	int test = 3;
-
-	frc::SendableChooser<int*> MiddleDirChooser;
-	int midleft = 0;
-	int midright = 1;
 
 	frc::SendableChooser<int*> AngleChooser;
 	int test1 = 0;
@@ -73,13 +72,6 @@ public:
 
 	void RobotInit() {
 
-		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
-		//CameraServer::GetInstance()->SetQuality(50);
-
-		//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
-		/*CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
-		CameraServer::GetInstance()->StartAutomaticCapture();*/
-
 		std::thread visionThread(Vision::VisionThread);
 		visionThread.detach();
 
@@ -97,20 +89,7 @@ public:
 				  <<" /        \\  \\___ / __ \\|  |__/ __ \\\\     /  / __ \\_/ /_/  >___ \\ \n"
 				  <<"/_______  /\\___  >____  /____(____  /\\/\\_/  (____  /\\___  /____  >\n"
 				  <<"        \\/     \\/     \\/          \\/             \\//_____/     \\/ \n";
-		//drive.DriveInit();
 
-
-		/*if(fork() == 0){
-			SmartDashboard::PutString("forked", "yes");
-			system("/home/lvuser/grip &");
-
-		}*/
-
-		/*
-		chooser.AddDefault(autoNameDefault, autoNameDefault);
-		chooser.AddObject(autoNameCustom, autoNameCustom);
-		frc::SmartDashboard::PutData("Auto Modes", &chooser);
-		*/
 
 	}
 
@@ -122,11 +101,6 @@ public:
 		SmartDashboard::PutData("AutonModes", &chooser);
 
 
-		MiddleDirChooser.AddDefault("Middle Left", &midleft);
-		MiddleDirChooser.AddObject("Middle Right", &midright);
-		SmartDashboard::PutData("Middle Direction", &MiddleDirChooser);
-
-
 		AngleChooser.AddDefault("Test1", &test1);
 		AngleChooser.AddObject("Test2", &test2);
 		AngleChooser.AddObject("Test3", &test3);
@@ -134,63 +108,39 @@ public:
 		SmartDashboard::PutData("Angle Tester", &AngleChooser);
 	}
 
-	/*void RobotInit() {
-
-			//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
-			//CameraServer::GetInstance()->SetQuality(50);
-
-			//CameraServer::GetInstance()->SetSize(CameraServer::kSize320x240);
-			CameraServer::GetInstance()->SetSize(CameraServer::kSize640x480);
-			CameraServer::GetInstance()->StartAutomaticCapture();
-
-
-
-			*
-			chooser.AddDefault(autoNameDefault, autoNameDefault);
-			chooser.AddObject(autoNameCustom, autoNameCustom);
-			frc::SmartDashboard::PutData("Auto Modes", &chooser);
-			*
-
-		}*/
-
-
 
 	void Autonomous() override {
 		drive.Safety();
 		Vision::SetUseVision(true);
 		//RobotChooser();
 		int selectFieldPos = *(chooser.GetSelected());
-			if(selectFieldPos == 0){
-				auton.SetFieldPosition(StartingPosition::Left);
-				std::cout << "Autonomous Mode: LEFT\n";
-			}else if(selectFieldPos == 1){
-				auton.SetFieldPosition(StartingPosition::Middle);
-				std::cout << "Autonomous Mode: MIDDLE\n";
-			}else if(selectFieldPos == 2){
-				auton.SetFieldPosition(StartingPosition::Right);
-				std::cout << "Autonomous Mode: RIGHT\n";
-			}else if(selectFieldPos ==3){
-				auton.SetFieldPosition(StartingPosition::Test);
-				std::cout << "Autonomous Mode: A MODE THAT YOU SHOULD NOT BE IN\n";
-			}else{
-
-			}
-			auton.AutoInit();
+		//keep track of the autonomouse mode
+		StartingPosition botposition;
+		if(selectFieldPos == 0){
+			auton.SetFieldPosition(StartingPosition::Left);
+			botposition = StartingPosition::Left;
+			std::cout << "Autonomous Mode: LEFT\n";
+		}else if(selectFieldPos == 2){
+			auton.SetFieldPosition(StartingPosition::Right);
+			botposition = StartingPosition::Right;
+			std::cout << "Autonomous Mode: RIGHT\n";
+		}else{
+			auton.SetFieldPosition(StartingPosition::Middle);
+			botposition = StartingPosition::Middle;
+			std::cout << "Autonomous Mode: MIDDLE\n";
+		}
+		auton.AutoInit();
 		while(IsAutonomous() && IsEnabled()){
-			if(StartingPosition::Left){
+			if(botposition == StartingPosition::Left){
 				auton.AutonLeft();
-			}else if(StartingPosition::Middle){
+			}else if(botposition == StartingPosition::Middle){
 				auton.AutonMiddle();
-			}else if(StartingPosition::Right){
+			}else if(botposition == StartingPosition::Right){
 				auton.AutonRight();
 			}
-				//auton.Auton();
 			showstats.DesplayStats();
-			Wait(0.005);
-
+			Wait(0.005);  // should this be changed to match teleop timing?
 		}
-
-
 	}
 
 
@@ -202,38 +152,20 @@ public:
 		drive.InvertDrive(false);
 		printf("Tellop Is Enabled");
 		std::cout << "Tellop is Enabled\n" << "...\n" << "GO\n";
-		//RobotChooser();
-		while (IsOperatorControl() && IsEnabled()) {
-			//float angle = Gyro.GetAngle();
-			//double angle = (kAnglePoint - Gyro.GetAngle()) * 0.005;
 
-//			setDriveSpeed();
+		while (IsOperatorControl() && IsEnabled()) {
+
 			drive.TeleOp();
 			//hopper.TeleOp();
 			handler.TeleOp();
 			climber.TeleOp();
 			showstats.DesplayStats();
 			SmartDashboard::PutNumber("Heading to target", Vision::GetHeadingToTarget(drive.PullGyroAngle()));
-			//int large_angle = (int)(angle * 1000);
-			//angle = (large_angle % 360000) / 1000.0f;
-			//SmartDashboard::PutNumber("GYRO", angle);
+
 			frc::Wait(0.05);
 		}
 	}
 
-	/*
-	void setDriveSpeed(){
-		float LeftStickValue = .75 * (-getJoystickTransform(Lstick.GetY()));
-		float RightStickValue = .75 * (-getJoystickTransform(Rstick.GetY()));
-
-		if(DriveForward==true){
-			mainDrive.TankDrive(LeftStickValue, RightStickValue);
-		}else{
-			mainDrive.TankDrive(-LeftStickValue, -RightStickValue);
-		}
-
-	}
-*/
 	float getJoystickTransform(float input){
 		return input;
 
